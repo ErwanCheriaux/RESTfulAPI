@@ -1,4 +1,4 @@
-namespace RESTfulAPI;
+namespace RESTfulAPI.Models;
 
 public class WeatherForecast
 {

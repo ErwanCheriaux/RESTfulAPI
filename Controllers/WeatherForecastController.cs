@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using RESTfulAPI.Models;
 
 namespace RESTfulAPI.Controllers;
 
