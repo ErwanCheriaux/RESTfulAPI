@@ -20,4 +20,9 @@ public class Garage : IGarage
     {
         return _bikes.SingleOrDefault(bike => bike.Id == id);
     }
+
+    public void CreateBike(Bike bike)
+    {
+        _bikes.Add(bike);
+    }
 }

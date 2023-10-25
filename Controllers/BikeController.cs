@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RESTfulAPI.DataAccess;
 using RESTfulAPI.DataTransferObjects;
+using RESTfulAPI.Models;
 
 namespace RESTfulAPI.Controllers;
 
@@ -35,5 +36,26 @@ public class BikeController : ControllerBase
         }
 
         return bike.AsDto();
+    }
+
+    // POST /bikes
+    [HttpPost]
+    public ActionResult<BikeDto> CreateBike(CreateBikeDto bikeDto)
+    {
+        Bike bike = new()
+        {
+            Id = Guid.NewGuid(),
+            Brand = bikeDto.Brand,
+            Model = bikeDto.Model,
+            Year = bikeDto.Year,
+            Material = bikeDto.Material,
+            Color = bikeDto.Color,
+            Size = bikeDto.Size,
+            SerialNumber = bikeDto.SerialNumber
+        };
+
+        _garage.CreateBike(bike);
+
+        return CreatedAtAction(nameof(GetBike), new { Id = bike.Id }, bike.AsDto());
     }
 }
