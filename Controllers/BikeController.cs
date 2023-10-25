@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RESTfulAPI.DataAccess;
-using RESTfulAPI.Models;
+using RESTfulAPI.DataTransferObjects;
 
 namespace RESTfulAPI.Controllers;
 
@@ -17,15 +17,15 @@ public class BikeController : ControllerBase
 
     // GET /bikes
     [HttpGet]
-    public IEnumerable<Bike> GetBikes()
+    public IEnumerable<BikeDto> GetBikes()
     {
-        var bikes = _garage.GetBikes();
+        var bikes = _garage.GetBikes().Select(bikes => bikes.AsDto());
         return bikes;
     }
 
     // GET /bikes/{id}
     [HttpGet("{id}")]
-    public ActionResult<Bike> GetBike(Guid id)
+    public ActionResult<BikeDto> GetBike(Guid id)
     {
         var bike = _garage.GetBike(id);
 
@@ -34,6 +34,6 @@ public class BikeController : ControllerBase
             return NotFound();
         }
 
-        return bike;
+        return bike.AsDto();
     }
 }
