@@ -2,7 +2,7 @@ using RESTfulAPI.Models;
 
 namespace RESTfulAPI.DataAccess;
 
-public class Garage
+public class Garage : IGarage
 {
     private readonly List<Bike> _bikes = new()
     {

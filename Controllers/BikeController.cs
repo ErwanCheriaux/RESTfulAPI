@@ -8,11 +8,11 @@ namespace RESTfulAPI.Controllers;
 [Route("bikes")]
 public class BikeController : ControllerBase
 {
-    private readonly Garage _garage;
+    private readonly IGarage _garage;
 
-    public BikeController()
+    public BikeController(IGarage garage)
     {
-        _garage = new Garage();
+        _garage = garage;
     }
 
     // GET /bikes
