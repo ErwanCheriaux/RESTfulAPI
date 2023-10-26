@@ -85,4 +85,20 @@ public class BikeController : ControllerBase
 
         return NoContent();
     }
+
+    // DELETE /bikes/{id}
+    [HttpDelete("{id}")]
+    public ActionResult DeleteBike(Guid id)
+    {
+        var existingBike = _garage.GetBike(id);
+
+        if (existingBike is null)
+        {
+            return NotFound();
+        }
+
+        _garage.DeleteBike(id);
+
+        return NoContent();
+    }
 }

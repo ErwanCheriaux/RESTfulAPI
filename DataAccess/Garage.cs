@@ -32,4 +32,10 @@ public class Garage : IGarage
         var index = _bikes.FindIndex(existingBike => existingBike.Id == bike.Id);
         _bikes[index] = bike;
     }
+
+    public void DeleteBike(Guid id)
+    {
+        var index = _bikes.FindIndex(existingBike => existingBike.Id == id);
+        _bikes.RemoveAt(index);
+    }
 }
