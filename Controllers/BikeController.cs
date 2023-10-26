@@ -58,4 +58,31 @@ public class BikeController : ControllerBase
 
         return CreatedAtAction(nameof(GetBike), new { Id = bike.Id }, bike.AsDto());
     }
+
+    // PUT /bikes/{id}
+    [HttpPut("{id}")]
+    public ActionResult UpdateBike(Guid id, UpdateBikeDto bikeDto)
+    {
+        var existingBike = _garage.GetBike(id);
+
+        if (existingBike is null)
+        {
+            return NotFound();
+        }
+
+        Bike updatedBike = existingBike with
+        {
+            Brand = bikeDto.Brand,
+            Model = bikeDto.Model,
+            Year = bikeDto.Year,
+            Material = bikeDto.Material,
+            Color = bikeDto.Color,
+            Size = bikeDto.Size,
+            SerialNumber = bikeDto.SerialNumber
+        };
+
+        _garage.UpdateBike(updatedBike);
+
+        return NoContent();
+    }
 }

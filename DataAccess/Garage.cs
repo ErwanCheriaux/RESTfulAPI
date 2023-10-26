@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using RESTfulAPI.Models;
 
 namespace RESTfulAPI.DataAccess;
@@ -24,5 +25,11 @@ public class Garage : IGarage
     public void CreateBike(Bike bike)
     {
         _bikes.Add(bike);
+    }
+
+    public void UpdateBike(Bike bike)
+    {
+        var index = _bikes.FindIndex(existingBike => existingBike.Id == bike.Id);
+        _bikes[index] = bike;
     }
 }

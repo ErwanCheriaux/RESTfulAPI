@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RESTfulAPI.DataTransferObjects;
 
-public record CreateBikeDto
+public record UpdateBikeDto
 {
     [Required]
     public string? Brand { get; init; }
