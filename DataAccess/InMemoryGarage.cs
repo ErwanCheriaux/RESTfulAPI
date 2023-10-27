@@ -1,9 +1,8 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using RESTfulAPI.Models;
 
 namespace RESTfulAPI.DataAccess;
 
-public class Garage : IGarage
+public class InMemoryGarage : IGarage
 {
     private readonly List<Bike> _bikes = new()
     {
