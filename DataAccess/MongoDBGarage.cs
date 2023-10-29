@@ -1,4 +1,6 @@
+using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Core.Operations;
 using RESTfulAPI.Models;
 
 namespace RESTfulAPI.DataAccess;
@@ -8,6 +10,7 @@ public class MongoDBGarage : IGarage
     private const string DatabaseName = "restfulapi";
     private const string CollectionName = "bikes";
     private readonly IMongoCollection<Bike> _bikesCollection;
+    private readonly FilterDefinitionBuilder<Bike> _filterBuilder = Builders<Bike>.Filter;
 
     public MongoDBGarage(IMongoClient mongoClient)
     {
@@ -22,21 +25,24 @@ public class MongoDBGarage : IGarage
 
     public void DeleteBike(Guid id)
     {
-        throw new NotImplementedException();
+        var filter = _filterBuilder.Eq(bike => bike.Id, id);
+        _bikesCollection.DeleteOne(filter);
     }
 
     public Bike? GetBike(Guid id)
     {
-        throw new NotImplementedException();
+        var filter = _filterBuilder.Eq(bike => bike.Id, id);
+        return _bikesCollection.Find(filter).SingleOrDefault();
     }
 
     public IEnumerable<Bike> GetBikes()
     {
-        throw new NotImplementedException();
+        return _bikesCollection.Find(new BsonDocument()).ToList();
     }
 
     public void UpdateBike(Bike bike)
     {
-        throw new NotImplementedException();
+        var filter = _filterBuilder.Eq(existingBike => existingBike.Id, bike.Id);
+        _bikesCollection.ReplaceOne(filter, bike);
     }
 }
