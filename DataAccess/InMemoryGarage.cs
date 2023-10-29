@@ -37,4 +37,29 @@ public class InMemoryGarage : IGarage
         var index = _bikes.FindIndex(existingBike => existingBike.Id == id);
         _bikes.RemoveAt(index);
     }
+
+    public Task<IEnumerable<Bike>> GetBikesAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Bike> GetBikeAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task CreateBikeAsync(Bike bike)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task UpdateBikeAsync(Bike bike)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteBikeAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
 }

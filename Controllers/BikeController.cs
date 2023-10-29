@@ -18,17 +18,17 @@ public class BikeController : ControllerBase
 
     // GET /bikes
     [HttpGet]
-    public IEnumerable<BikeDto> GetBikes()
+    public async Task<IEnumerable<BikeDto>> GetBikesAsync()
     {
-        var bikes = _garage.GetBikes().Select(bikes => bikes.AsDto());
+        var bikes = (await _garage.GetBikesAsync()).Select(bikes => bikes.AsDto());
         return bikes;
     }
 
     // GET /bikes/{id}
     [HttpGet("{id}")]
-    public ActionResult<BikeDto> GetBike(Guid id)
+    public async Task<ActionResult<BikeDto>> GetBikeAsync(Guid id)
     {
-        var bike = _garage.GetBike(id);
+        var bike = await _garage.GetBikeAsync(id);
 
         if (bike is null)
         {
@@ -40,7 +40,7 @@ public class BikeController : ControllerBase
 
     // POST /bikes
     [HttpPost]
-    public ActionResult<BikeDto> CreateBike(CreateBikeDto bikeDto)
+    public async Task<ActionResult<BikeDto>> CreateBikeAsync(CreateBikeDto bikeDto)
     {
         Bike bike = new()
         {
@@ -55,16 +55,16 @@ public class BikeController : ControllerBase
             CreationDate = DateTimeOffset.UtcNow
         };
 
-        _garage.CreateBike(bike);
+        await _garage.CreateBikeAsync(bike);
 
-        return CreatedAtAction(nameof(GetBike), new { Id = bike.Id }, bike.AsDto());
+        return CreatedAtAction(nameof(GetBikeAsync), new { Id = bike.Id }, bike.AsDto());
     }
 
     // PUT /bikes/{id}
     [HttpPut("{id}")]
-    public ActionResult UpdateBike(Guid id, UpdateBikeDto bikeDto)
+    public async Task<ActionResult> UpdateBikeAsync(Guid id, UpdateBikeDto bikeDto)
     {
-        var existingBike = _garage.GetBike(id);
+        var existingBike = await _garage.GetBikeAsync(id);
 
         if (existingBike is null)
         {
@@ -82,23 +82,23 @@ public class BikeController : ControllerBase
             SerialNumber = bikeDto.SerialNumber
         };
 
-        _garage.UpdateBike(updatedBike);
+        await _garage.UpdateBikeAsync(updatedBike);
 
         return NoContent();
     }
 
     // DELETE /bikes/{id}
     [HttpDelete("{id}")]
-    public ActionResult DeleteBike(Guid id)
+    public async Task<ActionResult> DeleteBikeAsync(Guid id)
     {
-        var existingBike = _garage.GetBike(id);
+        var existingBike = await _garage.GetBikeAsync(id);
 
         if (existingBike is null)
         {
             return NotFound();
         }
 
-        _garage.DeleteBike(id);
+        await _garage.DeleteBikeAsync(id);
 
         return NoContent();
     }
