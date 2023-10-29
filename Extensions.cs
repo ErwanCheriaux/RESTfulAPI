@@ -16,7 +16,8 @@ public static class Extensions
             Material = bike.Material,
             Color = bike.Color,
             Size = bike.Size,
-            SerialNumber = bike.SerialNumber
+            SerialNumber = bike.SerialNumber,
+            CreationDate = bike.CreationDate
         };
     }
 }

@@ -10,4 +10,5 @@ public record Bike
     public string? Color { get; init; }
     public string? Size { get; init; }
     public string? SerialNumber { get; init; }
+    public DateTimeOffset CreationDate { get; init; }
 }

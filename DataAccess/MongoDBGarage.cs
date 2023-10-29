@@ -1,6 +1,5 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Operations;
 using RESTfulAPI.Models;
 
 namespace RESTfulAPI.DataAccess;

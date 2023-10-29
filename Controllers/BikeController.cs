@@ -51,7 +51,8 @@ public class BikeController : ControllerBase
             Material = bikeDto.Material,
             Color = bikeDto.Color,
             Size = bikeDto.Size,
-            SerialNumber = bikeDto.SerialNumber
+            SerialNumber = bikeDto.SerialNumber,
+            CreationDate = DateTimeOffset.UtcNow
         };
 
         _garage.CreateBike(bike);
