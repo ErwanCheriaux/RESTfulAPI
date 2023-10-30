@@ -9,9 +9,10 @@ Create a new ASP.NET Core Web API project template
 dotnet new webapi -n RESTfulAPI
 ```
 
-Add the MongoDB .NET driver as a NuGet package to your .NET project
+Add the MongoDB .NET driver and healthcheck to your .NET project
 ```console
 dotnet add package MongoDB.Driver
+dotnet add package AspNetCore.HealthChecks.MongoDB
 ```
 
 Run a MongoDB container in Docker with a mongodbdata volume and mongoadmin credentials
