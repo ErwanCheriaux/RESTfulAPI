@@ -10,14 +10,9 @@ WORKDIR /src
 COPY ["RESTfulAPI.csproj", "./"]
 RUN dotnet restore "RESTfulAPI.csproj"
 COPY . .
-WORKDIR "/src/."
-RUN dotnet build "RESTfulAPI.csproj" -c $configuration -o /app/build
-
-FROM build AS publish
-ARG configuration=Release
 RUN dotnet publish "RESTfulAPI.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "RESTfulAPI.dll"]
