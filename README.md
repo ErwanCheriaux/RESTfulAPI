@@ -37,3 +37,20 @@ docket network create restfulapinetwork
 docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=mongoadmin --network=restfulapinetwork mongo
 docker run -it --rm -p 8080:80 -e MongoDBSettings:Host=mongo -e MongoDBSettings:Password=mongoadmin --network=restfulapinetwork restfulapi:v1
 ```
+
+Kubernetes secretes
+```console
+kubectl create secret generic restfulapi-secrets --from-literal=mongodb-password='mongoadmin'
+```
+
+Kubernetes deployment and service
+```console
+cd .\Kubernetes\
+kubectl apply -f .\mongodb.yaml
+kubectl get statefulset
+kubectl apply -f .\RESTfulAPI.yaml
+kubectl get deployments
+
+kubectl get pods
+kubectl logs <pod name>
+```
