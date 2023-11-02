@@ -1,7 +1,10 @@
 # RESTful API
 Sandbox **REST API** in **C#** with **.Net Core 7**.  
 Save data with **MongoDB** (**Docker container**).  
-Developed with **Visual Studio Code**.
+Developed with **Visual Studio Code**.  
+
+RESTful API build into a **Docker image** and orchestrated with **Kubernetes**.
+**Loadbalancing** tested with Postman (hint: disable keep-alive connection header).
 
 ## CLI
 Create a new ASP.NET Core Web API project template
@@ -53,4 +56,15 @@ kubectl get deployments
 
 kubectl get pods
 kubectl logs <pod name>
+```
+
+Kubernetes persistent terminal display
+```console
+kubectl get pods -w
+kubectl logs <pod name> -f
+```
+
+Kubernetes scale
+```console
+kubectl scale deployments/restfulapi-deployment --replicas=3
 ```

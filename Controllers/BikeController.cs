@@ -10,10 +10,12 @@ namespace RESTfulAPI.Controllers;
 public class BikeController : ControllerBase
 {
     private readonly IGarage _garage;
+    private readonly ILogger<BikeController> _logger;
 
-    public BikeController(IGarage garage)
+    public BikeController(IGarage garage, ILogger<BikeController> logger)
     {
         _garage = garage;
+        _logger = logger;
     }
 
     // GET /bikes
@@ -21,6 +23,9 @@ public class BikeController : ControllerBase
     public async Task<IEnumerable<BikeDto>> GetBikesAsync()
     {
         var bikes = (await _garage.GetBikesAsync()).Select(bikes => bikes.AsDto());
+
+        _logger.LogInformation($"{DateTime.UtcNow.ToString("hh:mm:ss")}: Retrieved {bikes.Count()} bike(s)");
+
         return bikes;
     }
 
