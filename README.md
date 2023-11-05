@@ -25,10 +25,19 @@ To avoid the following warning "The selected launch configuration is configured 
 dotnet dev-certs https --trust
 ```
 
-Add the MongoDB .NET driver and healthcheck to your .NET project
+Add MongoDB .NET driver and HealthChecks.MongoDB to the API project
 ```console
+cd .\MountainBike.Api\
 dotnet add package MongoDB.Driver
 dotnet add package AspNetCore.HealthChecks.MongoDB
+```
+
+Add APIs references, Loggings.Abstractions package and moq package to the xUnit project
+```console
+cd .\MountainBike.UnitTests\
+dotnet add reference ..\MountainBike.Api\MountainBike.Api.csproj
+dotnet add package Microsoft.Extensions.Logging.Abstractions
+dotnet add package moq
 ```
 
 Run a MongoDB container in Docker with a mongodbdata volume and mongoadmin credentials
