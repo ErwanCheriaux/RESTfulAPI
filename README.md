@@ -9,13 +9,15 @@ MountainBike project is built into a **Docker image** and orchestrated with **Ku
 ## CLI
 Create a new ASP.NET Core Web API project template
 ```console
-dotnet new webapi -n MountainBike
+dotnet new webapi -n MountainBike.Api
+dotnet new xunit -n MountainBike.UnitTests
 ```
 
 If the solution structure changes, delete .sln file and regenerate it with the corresponding .csproj
 ```console
 dotnet new sln -n MountainBike
 dotnet sln add .\MountainBike.Api\
+dotnet sln add .\MountainBike.UnitTests\
 ```
 
 To avoid the following warning "The selected launch configuration is configured to launch a web browser but no trusted development certificate was found. Create a trusted self-signed certificate?"
