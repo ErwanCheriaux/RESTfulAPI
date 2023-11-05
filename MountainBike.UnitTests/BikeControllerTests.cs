@@ -52,6 +52,27 @@ public class BikeControllerTests
             option => option.ComparingByMembers<Bike>());
     }
 
+    [Fact]
+    public async Task GetBikesAsync_WithExistingBikes_ReturnsAllBikes()
+    {
+        // Arrange
+        var expectedBikes = new[] { CreateRandomBike(), CreateRandomBike(), CreateRandomBike() };
+
+        _garageStub
+            .Setup(garage => garage.GetBikesAsync())
+            .ReturnsAsync(expectedBikes);
+
+        var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
+
+        // Act
+        var results = await controller.GetBikesAsync();
+
+        // Assert
+        results.Should().BeEquivalentTo(
+            expectedBikes,
+            option => option.ComparingByMembers<Bike>());
+    }
+
     private Bike CreateRandomBike()
     {
         return new()
