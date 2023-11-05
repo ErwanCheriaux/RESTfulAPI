@@ -38,13 +38,13 @@ public class BikeControllerTests
         var expectedBike = CreateRandomBike();
 
         _garageStub
-            .Setup(garage => garage.GetBikeAsync(It.IsAny<Guid>()))
+            .Setup(garage => garage.GetBikeAsync(expectedBike.Id))
             .ReturnsAsync(expectedBike);
 
         var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
 
         // Act
-        var result = await controller.GetBikeAsync(Guid.NewGuid());
+        var result = await controller.GetBikeAsync(expectedBike.Id);
 
         // Assert
         result.Value.Should().BeEquivalentTo(
