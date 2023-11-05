@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using RESTfulAPI.DataAccess;
-using RESTfulAPI.DataTransferObjects;
-using RESTfulAPI.Models;
+using MountainBike.DataAccess;
+using MountainBike.DataTransferObjects;
+using MountainBike.Models;
 
-namespace RESTfulAPI.Controllers;
+namespace MountainBike.Controllers;
 
 [ApiController]
 [Route("bikes")]

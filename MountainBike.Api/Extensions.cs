@@ -1,7 +1,7 @@
-using RESTfulAPI.DataTransferObjects;
-using RESTfulAPI.Models;
+using MountainBike.DataTransferObjects;
+using MountainBike.Models;
 
-namespace RESTfulAPI;
+namespace MountainBike;
 
 public static class Extensions
 {

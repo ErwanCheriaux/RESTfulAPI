@@ -1,6 +1,6 @@
-using RESTfulAPI.Models;
+using MountainBike.Models;
 
-namespace RESTfulAPI.DataAccess;
+namespace MountainBike.DataAccess;
 
 public interface IGarage
 {

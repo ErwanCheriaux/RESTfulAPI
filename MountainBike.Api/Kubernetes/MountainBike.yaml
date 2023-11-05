@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: restfulapi-deployment
+  name: mountainbike-deployment
 spec:
   selector:
     matchLabels:
-      app: restfulapi
+      app: mountainbike
   template:
     metadata:
       labels:
-        app: restfulapi
+        app: mountainbike
     spec:
       containers:
-        - name: restfulapi
-          image: erwancheriaux/restfulapi:v2
+        - name: mountainbike
+          image: erwancheriaux/mountainbike:v1
           resources:
             limits:
               memory: "128Mi"
@@ -26,7 +26,7 @@ spec:
             - name: MongoDBSettings__Password
               valueFrom:
                 secretKeyRef:
-                  name: restfulapi-secrets
+                  name: mountainbike-secrets
                   key: mongodb-password
           livenessProbe:
             httpGet:
@@ -41,11 +41,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: restfulapi-service
+  name: mountainbike-service
 spec:
   type: LoadBalancer
   selector:
-    app: restfulapi
+    app: mountainbike
   ports:
     - port: 80
       targetPort: 80

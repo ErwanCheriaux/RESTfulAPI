@@ -1,12 +1,12 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
-using RESTfulAPI.Models;
+using MountainBike.Models;
 
-namespace RESTfulAPI.DataAccess;
+namespace MountainBike.DataAccess;
 
 public class MongoDBGarage : IGarage
 {
-    private const string DatabaseName = "restfulapi";
+    private const string DatabaseName = "mountainbike";
     private const string CollectionName = "bikes";
     private readonly IMongoCollection<Bike> _bikesCollection;
     private readonly FilterDefinitionBuilder<Bike> _filterBuilder = Builders<Bike>.Filter;

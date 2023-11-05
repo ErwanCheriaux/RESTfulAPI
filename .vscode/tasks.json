@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/RESTfulAPI.sln",
+                "${workspaceFolder}/MountainBike.sln",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/RESTfulAPI.sln",
+                "${workspaceFolder}/MountainBike.sln",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/RESTfulAPI.sln"
+                "${workspaceFolder}/MountainBike.sln"
             ],
             "problemMatcher": "$msCompile"
         },
@@ -44,14 +44,14 @@
                 "build"
             ],
             "dockerBuild": {
-                "tag": "restfulapi:dev",
+                "tag": "mountainbike:dev",
                 "target": "base",
-                "dockerfile": "${workspaceFolder}/Dockerfile",
-                "context": "${workspaceFolder}",
+                "dockerfile": "${workspaceFolder}/MountainBike.Api/Dockerfile",
+                "context": "${workspaceFolder}/MountainBike.Api",
                 "pull": true
             },
             "netCore": {
-                "appProject": "${workspaceFolder}/RESTfulAPI.csproj"
+                "appProject": "${workspaceFolder}/MountainBike.Api/MountainBike.Api.csproj"
             }
         },
         {
@@ -61,9 +61,9 @@
                 "build"
             ],
             "dockerBuild": {
-                "tag": "restfulapi:latest",
-                "dockerfile": "${workspaceFolder}/Dockerfile",
-                "context": "${workspaceFolder}",
+                "tag": "mountainbike:latest",
+                "dockerfile": "${workspaceFolder}/MountainBike.Api/Dockerfile",
+                "context": "${workspaceFolder}/MountainBike.Api",
                 "platform": {
                     "os": "linux",
                     "architecture": "amd64"
@@ -71,7 +71,7 @@
                 "pull": true
             },
             "netCore": {
-                "appProject": "${workspaceFolder}/RESTfulAPI.csproj"
+                "appProject": "${workspaceFolder}/MountainBike.Api/MountainBike.Api.csproj"
             }
         },
         {
@@ -82,7 +82,7 @@
             ],
             "dockerRun": {},
             "netCore": {
-                "appProject": "${workspaceFolder}/RESTfulAPI.csproj",
+                "appProject": "${workspaceFolder}/MountainBike.Api/MountainBike.Api.csproj",
                 "enableDebugging": true,
                 "configureSsl": false
             }
@@ -95,7 +95,7 @@
             ],
             "dockerRun": {},
             "netCore": {
-                "appProject": "${workspaceFolder}/RESTfulAPI.csproj"
+                "appProject": "${workspaceFolder}/MountainBike.Api/MountainBike.Api.csproj"
             }
         }
     ]
