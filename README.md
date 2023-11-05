@@ -32,12 +32,13 @@ dotnet add package MongoDB.Driver
 dotnet add package AspNetCore.HealthChecks.MongoDB
 ```
 
-Add APIs references, Loggings.Abstractions package and moq package to the xUnit project
+Add APIs references, Loggings.Abstractions, moq and FluentAssertions packages to the xUnit project
 ```console
 cd .\MountainBike.UnitTests\
 dotnet add reference ..\MountainBike.Api\MountainBike.Api.csproj
 dotnet add package Microsoft.Extensions.Logging.Abstractions
 dotnet add package moq
+dotnet add package FluentAssertions
 ```
 
 Run a MongoDB container in Docker with a mongodbdata volume and mongoadmin credentials
