@@ -19,9 +19,14 @@ public class BikeController : ControllerBase
 
     // GET /bikes
     [HttpGet]
-    public async Task<IEnumerable<BikeDto>> GetBikesAsync()
+    public async Task<IEnumerable<BikeDto>> GetBikesAsync(string? Brand = null)
     {
         var bikes = (await _garage.GetBikesAsync()).Select(bikes => bikes.AsDto());
+
+        if (!string.IsNullOrWhiteSpace(Brand))
+        {
+            bikes = bikes.Where(bike => bike.Brand!.Contains(Brand, StringComparison.OrdinalIgnoreCase));
+        }
 
         _logger.LogInformation($"{DateTime.UtcNow.ToString("hh:mm:ss")}: Retrieved {bikes.Count()} bike(s)");
 

@@ -71,6 +71,32 @@ public class BikeControllerTests
     }
 
     [Fact]
+    public async Task GetBikesAsync_WithMatchingBikeBrand_ReturnsMatchingBikeBrand()
+    {
+        // Arrange
+        string matchingBikeBrand = "santa";
+        var allBikes = new[]
+        {
+            new Bike(){Brand = "Santa Cruz"},
+            new Bike(){Brand = "Yeti"},
+            new Bike(){Brand = "santa monica"}
+         };
+
+        _garageStub
+            .Setup(garage => garage.GetBikesAsync())
+            .ReturnsAsync(allBikes);
+
+        var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
+
+        // Act
+        var results = await controller.GetBikesAsync(matchingBikeBrand);
+
+        // Assert
+        results.Should().OnlyContain(
+            bike => bike.Brand == allBikes[0].Brand || bike.Brand == allBikes[2].Brand);
+    }
+
+    [Fact]
     public async Task CreateBikeAsync_WithBiketoCreate_ReturnsCreatedBike()
     {
         // Arrange
