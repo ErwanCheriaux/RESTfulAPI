@@ -93,6 +93,39 @@ public class BikeControllerTests
         createdBike.CreationDate.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromMilliseconds(1000));
     }
 
+    [Fact]
+    public async Task UpdateBikeAsync_WithUnexistingBike_ReturnsNotFound()
+    {
+        // Arrange
+        var bikeToUpdate = CreateRandomUpdateBikeDto();
+        var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
+
+        // Act
+        var result = await controller.UpdateBikeAsync(Guid.NewGuid(), bikeToUpdate);
+
+        // Assert
+        result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Fact]
+    public async Task UpdateBikeAsync_WithExistingBike_ReturnsNoContent()
+    {
+        // Arrange
+        var existingbike = CreateRandomBike();
+        var bikeToUpdate = CreateRandomUpdateBikeDto();
+        _garageStub
+            .Setup(garage => garage.GetBikeAsync(existingbike.Id))
+            .ReturnsAsync(existingbike);
+
+        var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
+
+        // Act
+        var result = await controller.UpdateBikeAsync(existingbike.Id, bikeToUpdate);
+
+        // Assert
+        result.Should().BeOfType<NoContentResult>();
+    }
+
     private Bike CreateRandomBike()
     {
         return new()
@@ -110,6 +143,20 @@ public class BikeControllerTests
     }
 
     private CreateBikeDto CreateRandomCreateBikeDto()
+    {
+        return new()
+        {
+            Brand = Guid.NewGuid().ToString(),
+            Model = Guid.NewGuid().ToString(),
+            Year = random.Next(1900, 2100),
+            Material = Guid.NewGuid().ToString(),
+            Color = Guid.NewGuid().ToString(),
+            Size = Guid.NewGuid().ToString(),
+            SerialNumber = Guid.NewGuid().ToString()
+        };
+    }
+
+    private UpdateBikeDto CreateRandomUpdateBikeDto()
     {
         return new()
         {
