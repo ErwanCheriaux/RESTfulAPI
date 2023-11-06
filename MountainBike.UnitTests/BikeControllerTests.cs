@@ -126,6 +126,37 @@ public class BikeControllerTests
         result.Should().BeOfType<NoContentResult>();
     }
 
+    [Fact]
+    public async Task DeleteBikeAsync_WithUnexistingBike_ReturnsNotFound()
+    {
+        // Arrange
+        var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
+
+        // Act
+        var result = await controller.DeleteBikeAsync(Guid.NewGuid());
+
+        // Assert
+        result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Fact]
+    public async Task DeleteBikeAsync_WithExistingBike_ReturnsNoContent()
+    {
+        // Arrange
+        var existingBike = CreateRandomBike();
+        _garageStub
+            .Setup(garage => garage.GetBikeAsync(existingBike.Id))
+            .ReturnsAsync(existingBike);
+
+        var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
+
+        // Act
+        var result = await controller.DeleteBikeAsync(existingBike.Id);
+
+        // Assert
+        result.Should().BeOfType<NoContentResult>();
+    }
+
     private Bike CreateRandomBike()
     {
         return new()
