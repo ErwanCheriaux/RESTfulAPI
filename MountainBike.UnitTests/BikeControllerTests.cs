@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using MountainBike.Controllers;
 using MountainBike.DataAccess;
+using MountainBike.DataTransferObjects;
 using MountainBike.Models;
 
 namespace MountainBike.UnitTests;
@@ -49,7 +50,7 @@ public class BikeControllerTests
         // Assert
         result.Value.Should().BeEquivalentTo(
             expectedBike,
-            option => option.ComparingByMembers<Bike>());
+            option => option.ComparingByMembers<BikeDto>());
     }
 
     [Fact]
@@ -70,7 +71,26 @@ public class BikeControllerTests
         // Assert
         results.Should().BeEquivalentTo(
             expectedBikes,
-            option => option.ComparingByMembers<Bike>());
+            option => option.ComparingByMembers<BikeDto>());
+    }
+
+    [Fact]
+    public async Task CreateBikeAsync_WithBiketoCreate_ReturnsCreatedBike()
+    {
+        // Arrange
+        var bikeToCreate = CreateRandomCreateBikeDto();
+        var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
+
+        // Act
+        var result = await controller.CreateBikeAsync(bikeToCreate);
+
+        // Assert
+        var createdBike = ((result.Result as CreatedAtActionResult)!.Value as BikeDto)!;
+        createdBike.Should().BeEquivalentTo(
+            bikeToCreate,
+            option => option.ComparingByMembers<BikeDto>());
+        createdBike.Id.Should().NotBeEmpty();
+        createdBike.CreationDate.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromMilliseconds(1000));
     }
 
     private Bike CreateRandomBike()
@@ -86,6 +106,20 @@ public class BikeControllerTests
             Size = Guid.NewGuid().ToString(),
             SerialNumber = Guid.NewGuid().ToString(),
             CreationDate = DateTimeOffset.UtcNow
+        };
+    }
+
+    private CreateBikeDto CreateRandomCreateBikeDto()
+    {
+        return new()
+        {
+            Brand = Guid.NewGuid().ToString(),
+            Model = Guid.NewGuid().ToString(),
+            Year = random.Next(1900, 2100),
+            Material = Guid.NewGuid().ToString(),
+            Color = Guid.NewGuid().ToString(),
+            Size = Guid.NewGuid().ToString(),
+            SerialNumber = Guid.NewGuid().ToString()
         };
     }
 }
