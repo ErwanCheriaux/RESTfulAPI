@@ -2,10 +2,10 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using MountainBike.Controllers;
-using MountainBike.DataAccess;
-using MountainBike.DataTransferObjects;
-using MountainBike.Models;
+using MountainBike.Api.Controllers;
+using MountainBike.Api.DataAccess;
+using MountainBike.Api;
+using MountainBike.Api.Models;
 
 namespace MountainBike.UnitTests;
 
@@ -48,9 +48,7 @@ public class BikeControllerTests
         var result = await controller.GetBikeAsync(expectedBike.Id);
 
         // Assert
-        result.Value.Should().BeEquivalentTo(
-            expectedBike,
-            option => option.ComparingByMembers<BikeDto>());
+        result.Value.Should().BeEquivalentTo(expectedBike);
     }
 
     [Fact]
@@ -69,9 +67,7 @@ public class BikeControllerTests
         var results = await controller.GetBikesAsync();
 
         // Assert
-        results.Should().BeEquivalentTo(
-            expectedBikes,
-            option => option.ComparingByMembers<BikeDto>());
+        results.Should().BeEquivalentTo(expectedBikes);
     }
 
     [Fact]
@@ -86,9 +82,7 @@ public class BikeControllerTests
 
         // Assert
         var createdBike = ((result.Result as CreatedAtActionResult)!.Value as BikeDto)!;
-        createdBike.Should().BeEquivalentTo(
-            bikeToCreate,
-            option => option.ComparingByMembers<BikeDto>());
+        createdBike.Should().BeEquivalentTo(bikeToCreate);
         createdBike.Id.Should().NotBeEmpty();
         createdBike.CreationDate.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromMilliseconds(1000));
     }
@@ -175,29 +169,27 @@ public class BikeControllerTests
 
     private CreateBikeDto CreateRandomCreateBikeDto()
     {
-        return new()
-        {
-            Brand = Guid.NewGuid().ToString(),
-            Model = Guid.NewGuid().ToString(),
-            Year = random.Next(1900, 2100),
-            Material = Guid.NewGuid().ToString(),
-            Color = Guid.NewGuid().ToString(),
-            Size = Guid.NewGuid().ToString(),
-            SerialNumber = Guid.NewGuid().ToString()
-        };
+        return new(
+            Guid.NewGuid().ToString(),
+            Guid.NewGuid().ToString(),
+            random.Next(1900, 2100),
+            Guid.NewGuid().ToString(),
+            Guid.NewGuid().ToString(),
+            Guid.NewGuid().ToString(),
+            Guid.NewGuid().ToString()
+        );
     }
 
     private UpdateBikeDto CreateRandomUpdateBikeDto()
     {
-        return new()
-        {
-            Brand = Guid.NewGuid().ToString(),
-            Model = Guid.NewGuid().ToString(),
-            Year = random.Next(1900, 2100),
-            Material = Guid.NewGuid().ToString(),
-            Color = Guid.NewGuid().ToString(),
-            Size = Guid.NewGuid().ToString(),
-            SerialNumber = Guid.NewGuid().ToString()
-        };
+        return new(
+            Guid.NewGuid().ToString(),
+            Guid.NewGuid().ToString(),
+            random.Next(1900, 2100),
+            Guid.NewGuid().ToString(),
+            Guid.NewGuid().ToString(),
+            Guid.NewGuid().ToString(),
+            Guid.NewGuid().ToString()
+        );
     }
 }

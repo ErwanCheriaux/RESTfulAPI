@@ -1,6 +1,6 @@
-using MountainBike.Models;
+using MountainBike.Api.Models;
 
-namespace MountainBike.DataAccess;
+namespace MountainBike.Api.DataAccess;
 
 public class InMemoryGarage : IGarage
 {

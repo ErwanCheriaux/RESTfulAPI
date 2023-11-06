@@ -5,8 +5,8 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
-using MountainBike.Configuration;
-using MountainBike.DataAccess;
+using MountainBike.Api.Settings;
+using MountainBike.Api.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 

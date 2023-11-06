@@ -1,14 +1,14 @@
-namespace MountainBike.Models;
+namespace MountainBike.Api.Models;
 
-public record Bike
+public class Bike
 {
-    public Guid Id { get; init; }
-    public string? Brand { get; init; }
-    public string? Model { get; init; }
-    public int Year { get; init; }
-    public string? Material { get; init; }
-    public string? Color { get; init; }
-    public string? Size { get; init; }
-    public string? SerialNumber { get; init; }
-    public DateTimeOffset CreationDate { get; init; }
+    public Guid Id { get; set; }
+    public string? Brand { get; set; }
+    public string? Model { get; set; }
+    public int Year { get; set; }
+    public string? Material { get; set; }
+    public string? Color { get; set; }
+    public string? Size { get; set; }
+    public string? SerialNumber { get; set; }
+    public DateTimeOffset CreationDate { get; set; }
 }

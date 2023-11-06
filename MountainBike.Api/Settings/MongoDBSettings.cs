@@ -1,4 +1,4 @@
-namespace MountainBike.Configuration;
+namespace MountainBike.Api.Settings;
 
 public class MongoDBSettings
 {

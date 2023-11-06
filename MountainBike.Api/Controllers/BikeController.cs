@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using MountainBike.DataAccess;
-using MountainBike.DataTransferObjects;
-using MountainBike.Models;
+using MountainBike.Api.DataAccess;
+using MountainBike.Api.Models;
 
-namespace MountainBike.Controllers;
+namespace MountainBike.Api.Controllers;
 
 [ApiController]
 [Route("bikes")]
@@ -76,18 +75,15 @@ public class BikeController : ControllerBase
             return NotFound();
         }
 
-        Bike updatedBike = existingBike with
-        {
-            Brand = bikeDto.Brand,
-            Model = bikeDto.Model,
-            Year = bikeDto.Year,
-            Material = bikeDto.Material,
-            Color = bikeDto.Color,
-            Size = bikeDto.Size,
-            SerialNumber = bikeDto.SerialNumber
-        };
+        existingBike.Brand = bikeDto.Brand;
+        existingBike.Model = bikeDto.Model;
+        existingBike.Year = bikeDto.Year;
+        existingBike.Material = bikeDto.Material;
+        existingBike.Color = bikeDto.Color;
+        existingBike.Size = bikeDto.Size;
+        existingBike.SerialNumber = bikeDto.SerialNumber;
 
-        await _garage.UpdateBikeAsync(updatedBike);
+        await _garage.UpdateBikeAsync(existingBike);
 
         return NoContent();
     }
