@@ -1,0 +1,28 @@
+projet:
+  - "**/*.csproj"
+  - "*.sln"
+
+settings:
+  - "**/Settings/**"
+  - "**/Properties/**"
+  - "**/*settings*.json"
+  - ".vscode/**"
+
+api:
+  - "MountainBike.Api/**/*.cs"
+
+test:
+  - "MountainBike.UnitTests/**/*.cs"
+
+readme:
+  - "README.md"
+
+docker:
+  - "**/Dokerfile"
+  - "**/.dockerignore"
+
+kubernetes:
+  - "**/Kubernetes/**"
+
+ci:
+  - ".github/**"
