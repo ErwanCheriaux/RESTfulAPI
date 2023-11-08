@@ -14,6 +14,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Debug 1
+      run: pwd
+    - name: Debug 2
+      run: ls
     - name: Move into API project
       run: cd MountainBike.Api
     - name: Build the Docker image
