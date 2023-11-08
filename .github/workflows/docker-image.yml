@@ -20,5 +20,9 @@ jobs:
       run: ls
     - name: Move into API project
       run: cd MountainBike.Api
+    - name: Debug 3
+      run: pwd
+    - name: Debug 4
+      run: ls
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag mountainbike:$(date +%s)
