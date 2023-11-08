@@ -7,14 +7,20 @@ namespace MountainBike.Api.DataAccess;
 public class MongoDBGarage : IGarage
 {
     private const string DatabaseName = "mountainbike";
-    private const string CollectionName = "bikes";
+
+    private const string BikesCollectionName = "bikes";
     private readonly IMongoCollection<Bike> _bikesCollection;
-    private readonly FilterDefinitionBuilder<Bike> _filterBuilder = Builders<Bike>.Filter;
+    private readonly FilterDefinitionBuilder<Bike> _bikesFilterBuilder = Builders<Bike>.Filter;
+
+    private const string RidersCollectionName = "riders";
+    private readonly IMongoCollection<Rider> _ridersCollection;
+    private readonly FilterDefinitionBuilder<Rider> _ridersFilterBuilder = Builders<Rider>.Filter;
 
     public MongoDBGarage(IMongoClient mongoClient)
     {
         IMongoDatabase mongoDatabase = mongoClient.GetDatabase(DatabaseName);
-        _bikesCollection = mongoDatabase.GetCollection<Bike>(CollectionName);
+        _bikesCollection = mongoDatabase.GetCollection<Bike>(BikesCollectionName);
+        _ridersCollection = mongoDatabase.GetCollection<Rider>(RidersCollectionName);
     }
 
     public void CreateBike(Bike bike)
@@ -27,37 +33,38 @@ public class MongoDBGarage : IGarage
         await _bikesCollection.InsertOneAsync(bike);
     }
 
-    public Task CreateRiderAsync(Rider rider)
+    public async Task CreateRiderAsync(Rider rider)
     {
-        throw new NotImplementedException();
+        await _ridersCollection.InsertOneAsync(rider);
     }
 
     public void DeleteBike(Guid id)
     {
-        var filter = _filterBuilder.Eq(bike => bike.Id, id);
+        var filter = _bikesFilterBuilder.Eq(bike => bike.Id, id);
         _bikesCollection.DeleteOne(filter);
     }
 
     public async Task DeleteBikeAsync(Guid id)
     {
-        var filter = _filterBuilder.Eq(bike => bike.Id, id);
+        var filter = _bikesFilterBuilder.Eq(bike => bike.Id, id);
         await _bikesCollection.DeleteOneAsync(filter);
     }
 
-    public Task DeleteRiderAsync(Guid id)
+    public async Task DeleteRiderAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var filter = _ridersFilterBuilder.Eq(rider => rider.Id, id);
+        await _ridersCollection.DeleteOneAsync(filter);
     }
 
     public Bike? GetBike(Guid id)
     {
-        var filter = _filterBuilder.Eq(bike => bike.Id, id);
+        var filter = _bikesFilterBuilder.Eq(bike => bike.Id, id);
         return _bikesCollection.Find(filter).SingleOrDefault();
     }
 
     public async Task<Bike> GetBikeAsync(Guid id)
     {
-        var filter = _filterBuilder.Eq(bike => bike.Id, id);
+        var filter = _bikesFilterBuilder.Eq(bike => bike.Id, id);
         return await _bikesCollection.Find(filter).SingleOrDefaultAsync();
     }
 
@@ -71,30 +78,32 @@ public class MongoDBGarage : IGarage
         return await _bikesCollection.Find(new BsonDocument()).ToListAsync();
     }
 
-    public Task<Rider> GetRiderAsync(Guid id)
+    public async Task<Rider> GetRiderAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var filter = _ridersFilterBuilder.Eq(rider => rider.Id, id);
+        return await _ridersCollection.Find(filter).SingleOrDefaultAsync();
     }
 
-    public Task<IEnumerable<Rider>> GetRidersAsync()
+    public async Task<IEnumerable<Rider>> GetRidersAsync()
     {
-        throw new NotImplementedException();
+        return await _ridersCollection.Find(new BsonDocument()).ToListAsync();
     }
 
     public void UpdateBike(Bike bike)
     {
-        var filter = _filterBuilder.Eq(existingBike => existingBike.Id, bike.Id);
+        var filter = _bikesFilterBuilder.Eq(existingBike => existingBike.Id, bike.Id);
         _bikesCollection.ReplaceOne(filter, bike);
     }
 
     public async Task UpdateBikeAsync(Bike bike)
     {
-        var filter = _filterBuilder.Eq(existingBike => existingBike.Id, bike.Id);
+        var filter = _bikesFilterBuilder.Eq(existingBike => existingBike.Id, bike.Id);
         await _bikesCollection.ReplaceOneAsync(filter, bike);
     }
 
-    public Task UpdateRiderAsync(Rider rider)
+    public async Task UpdateRiderAsync(Rider rider)
     {
-        throw new NotImplementedException();
+        var filter = _ridersFilterBuilder.Eq(existingRider => existingRider.Id, rider.Id);
+        await _ridersCollection.ReplaceOneAsync(filter, rider);
     }
 }
