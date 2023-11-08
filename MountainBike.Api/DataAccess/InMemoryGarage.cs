@@ -62,4 +62,29 @@ public class InMemoryGarage : IGarage
     {
         throw new NotImplementedException();
     }
+
+    public Task<IEnumerable<Rider>> GetRidersAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Rider> GetRiderAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task CreateRiderAsync(Rider rider)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task UpdateRiderAsync(Rider rider)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteRiderAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
 }

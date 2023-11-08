@@ -27,6 +27,11 @@ public class MongoDBGarage : IGarage
         await _bikesCollection.InsertOneAsync(bike);
     }
 
+    public Task CreateRiderAsync(Rider rider)
+    {
+        throw new NotImplementedException();
+    }
+
     public void DeleteBike(Guid id)
     {
         var filter = _filterBuilder.Eq(bike => bike.Id, id);
@@ -37,6 +42,11 @@ public class MongoDBGarage : IGarage
     {
         var filter = _filterBuilder.Eq(bike => bike.Id, id);
         await _bikesCollection.DeleteOneAsync(filter);
+    }
+
+    public Task DeleteRiderAsync(Guid id)
+    {
+        throw new NotImplementedException();
     }
 
     public Bike? GetBike(Guid id)
@@ -61,6 +71,16 @@ public class MongoDBGarage : IGarage
         return await _bikesCollection.Find(new BsonDocument()).ToListAsync();
     }
 
+    public Task<Rider> GetRiderAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<Rider>> GetRidersAsync()
+    {
+        throw new NotImplementedException();
+    }
+
     public void UpdateBike(Bike bike)
     {
         var filter = _filterBuilder.Eq(existingBike => existingBike.Id, bike.Id);
@@ -71,5 +91,10 @@ public class MongoDBGarage : IGarage
     {
         var filter = _filterBuilder.Eq(existingBike => existingBike.Id, bike.Id);
         await _bikesCollection.ReplaceOneAsync(filter, bike);
+    }
+
+    public Task UpdateRiderAsync(Rider rider)
+    {
+        throw new NotImplementedException();
     }
 }
