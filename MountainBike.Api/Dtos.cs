@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+using MountainBike.Api.Attributes;
 
 namespace MountainBike.Api;
 
@@ -45,12 +45,19 @@ public record RiderDto(
 
 public record CreateRiderDto(
     [Required] string? Name,
-    [Range(4, 120)] int Age,
     string? Country
-);
+)
+{
+    [DateOnlyRange("1900-01-01", "2200-01-01")]
+    public DateOnly Birthdate { get; init; }
+}
+
 
 public record UpdateRiderDto(
     [Required] string? Name,
-    [Range(4, 120)] int Age,
     string? Country
-);
+)
+{
+    [DateOnlyRange("1900-01-01", "2200-01-01")]
+    public DateOnly Birthdate { get; init; }
+}

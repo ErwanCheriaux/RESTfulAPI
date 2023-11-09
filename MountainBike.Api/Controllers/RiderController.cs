@@ -55,7 +55,7 @@ public class RiderController : ControllerBase
         {
             Id = Guid.NewGuid(),
             Name = riderDto.Name,
-            Age = riderDto.Age,
+            Birthdate = riderDto.Birthdate,
             Country = riderDto.Country,
             CreationDate = DateTimeOffset.UtcNow
         };
@@ -77,7 +77,7 @@ public class RiderController : ControllerBase
         }
 
         existingRider.Name = riderDto.Name;
-        existingRider.Age = riderDto.Age;
+        existingRider.Birthdate = riderDto.Birthdate;
         existingRider.Country = riderDto.Country;
 
         await _garage.UpdateRiderAsync(existingRider);
