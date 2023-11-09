@@ -48,7 +48,7 @@ public class RiderControllerTests
         var result = await controller.GetRiderAsync(expectedRider.Id);
 
         // Assert
-        result.Value.Should().BeEquivalentTo(expectedRider);
+        result.Value.Should().BeEquivalentTo(expectedRider, option => option.ExcludingMissingMembers());
     }
 
     [Fact]
@@ -64,10 +64,10 @@ public class RiderControllerTests
         var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
 
         // Act
-        var results = await controller.GetRidersAsync();
+        var result = await controller.GetRidersAsync();
 
         // Assert
-        results.Should().BeEquivalentTo(expectedRiders);
+        result.Should().BeEquivalentTo(expectedRiders, option => option.ExcludingMissingMembers());
     }
 
     [Fact]
@@ -89,11 +89,10 @@ public class RiderControllerTests
         var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
 
         // Act
-        var results = await controller.GetRidersAsync(matchingRiderName);
+        var result = await controller.GetRidersAsync(matchingRiderName);
 
         // Assert
-        results.Should().OnlyContain(
-            rider => rider.Name == allRiders[1].Name);
+        result.Should().OnlyContain(rider => rider.Name == allRiders[1].Name);
     }
 
     [Fact]
@@ -107,9 +106,11 @@ public class RiderControllerTests
         var result = await controller.CreateRiderAsync(riderToCreate);
 
         // Assert
+        result.Result.Should().BeEquivalentTo(riderToCreate, option => option.ExcludingMissingMembers());
+
         var createdRider = ((result.Result as CreatedAtActionResult)!.Value as RiderDto)!;
-        createdRider.Should().BeEquivalentTo(riderToCreate);
         createdRider.Id.Should().NotBeEmpty();
+        createdRider.Age.Should().Be(riderToCreate.Birthdate.AsAge());
         createdRider.CreationDate.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromMilliseconds(1000));
     }
 
@@ -183,7 +184,7 @@ public class RiderControllerTests
         {
             Id = Guid.NewGuid(),
             Name = Guid.NewGuid().ToString(),
-            Age = random.Next(1900, 2100),
+            Birthdate = CreateRandomDateOnly(),
             Country = Guid.NewGuid().ToString(),
             CreationDate = DateTimeOffset.UtcNow
         };
@@ -193,17 +194,28 @@ public class RiderControllerTests
     {
         return new(
             Guid.NewGuid().ToString(),
-            random.Next(1900, 2100),
             Guid.NewGuid().ToString()
-        );
+        )
+        {
+            Birthdate = CreateRandomDateOnly(),
+        };
     }
 
     private UpdateRiderDto CreateRandomUpdateRiderDto()
     {
         return new(
             Guid.NewGuid().ToString(),
-            random.Next(1900, 2100),
             Guid.NewGuid().ToString()
-        );
+        )
+        {
+            Birthdate = CreateRandomDateOnly(),
+        };
+    }
+
+    DateOnly CreateRandomDateOnly()
+    {
+        var start = new DateTime(1900, 1, 1);
+        int range = (DateTime.Today - start).Days;
+        return DateOnly.FromDateTime(start.AddDays(random.Next(range)));
     }
 }
