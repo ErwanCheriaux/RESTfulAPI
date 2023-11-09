@@ -39,7 +39,7 @@ public record RiderDto(
     string? Name,
     int Age,
     string? Country,
-    DateTimeOffset CreatationDate
+    DateTimeOffset CreationDate
 );
 
 public record CreateRiderDto(
