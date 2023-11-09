@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MountainBike.Api;
 
@@ -43,13 +44,13 @@ public record RiderDto(
 );
 
 public record CreateRiderDto(
-    string? Name,
-    int Age,
+    [Required] string? Name,
+    [Range(4, 120)] int Age,
     string? Country
 );
 
 public record UpdateRiderDto(
-    string? Name,
-    int Age,
+    [Required] string? Name,
+    [Range(4, 120)] int Age,
     string? Country
 );
