@@ -48,7 +48,7 @@ public class BikeControllerTests
         var result = await controller.GetBikeAsync(expectedBike.Id);
 
         // Assert
-        result.Value.Should().BeEquivalentTo(expectedBike);
+        result.Value.Should().BeEquivalentTo(expectedBike.AsDto());
     }
 
     [Fact]
@@ -67,7 +67,7 @@ public class BikeControllerTests
         var results = await controller.GetBikesAsync();
 
         // Assert
-        results.Should().BeEquivalentTo(expectedBikes);
+        results.Should().BeEquivalentTo(expectedBikes.Select(bike => bike.AsDto()));
     }
 
     [Fact]

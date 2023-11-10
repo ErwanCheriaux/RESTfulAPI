@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using MountainBike.Api.Attributes;
 
 namespace MountainBike.Api;
 
@@ -11,7 +12,8 @@ public record BikeDto(
     string? Color,
     string? Size,
     string? SerialNumber,
-    DateTimeOffset CreationDate);
+    DateTimeOffset CreationDate
+);
 
 public record CreateBikeDto(
     [Required] string? Brand,
@@ -20,7 +22,8 @@ public record CreateBikeDto(
     string? Material,
     string? Color,
     string? Size,
-    string? SerialNumber);
+    string? SerialNumber
+);
 
 public record UpdateBikeDto(
     [Required] string? Brand,
@@ -29,4 +32,32 @@ public record UpdateBikeDto(
     string? Material,
     string? Color,
     string? Size,
-    string? SerialNumber);
+    string? SerialNumber
+);
+
+public record RiderDto(
+    Guid Id,
+    string? Name,
+    int Age,
+    string? Country,
+    DateTimeOffset CreationDate
+);
+
+public record CreateRiderDto(
+    [Required] string? Name,
+    string? Country
+)
+{
+    [DateOnlyRange("1900-01-01", "2200-01-01")]
+    public DateOnly Birthdate { get; init; }
+}
+
+
+public record UpdateRiderDto(
+    [Required] string? Name,
+    string? Country
+)
+{
+    [DateOnlyRange("1900-01-01", "2200-01-01")]
+    public DateOnly Birthdate { get; init; }
+}

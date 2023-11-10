@@ -15,4 +15,10 @@ public interface IGarage
     public Task CreateBikeAsync(Bike bike);
     public Task UpdateBikeAsync(Bike bike);
     public Task DeleteBikeAsync(Guid id);
+
+    public Task<IEnumerable<Rider>> GetRidersAsync();
+    public Task<Rider> GetRiderAsync(Guid id);
+    public Task CreateRiderAsync(Rider rider);
+    public Task UpdateRiderAsync(Rider rider);
+    public Task DeleteRiderAsync(Guid id);
 }
