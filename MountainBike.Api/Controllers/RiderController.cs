@@ -100,4 +100,50 @@ public class RiderController : ControllerBase
 
         return NoContent();
     }
+
+    // GET /riders/{rider_id}/bikes
+    [HttpGet("{rider_id}/bikes")]
+    public async Task<IEnumerable<BikeDto>> GetRiderBikesAsync(Guid rider_id)
+    {
+        var riderbikes = (await _garage.GetBikesAsync()).Where(bike => bike.RiderId == rider_id);
+        return riderbikes.Select(bike => bike.AsDto());
+    }
+
+    // PUT /riders/{rider_id}/bikes/{bike_id}
+    [HttpPut("{rider_id}/bikes/{bike_id}")]
+    public async Task<ActionResult> UpdateRiderBikeAsync(Guid rider_id, Guid bike_id)
+    {
+        var rider = await _garage.GetRiderAsync(rider_id);
+        var bike = await _garage.GetBikeAsync(bike_id);
+
+        if (rider is null || bike is null)
+        {
+            return NotFound();
+        }
+
+        bike.RiderId = rider_id;
+
+        await _garage.UpdateBikeAsync(bike);
+
+        return NoContent();
+    }
+
+    // DELETE /riders/{rider_id}/bikes/{bike_id}
+    [HttpDelete("{rider_id}/bikes/{bike_id}")]
+    public async Task<ActionResult> DeleteRiderBikeAsync(Guid rider_id, Guid bike_id)
+    {
+        var rider = await _garage.GetRiderAsync(rider_id);
+        var bike = await _garage.GetBikeAsync(bike_id);
+
+        if (rider is null || bike is null)
+        {
+            return NotFound();
+        }
+
+        bike.RiderId = null;
+
+        await _garage.UpdateBikeAsync(bike);
+
+        return NoContent();
+    }
 }
