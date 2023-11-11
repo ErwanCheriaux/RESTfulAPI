@@ -178,6 +178,165 @@ public class RiderControllerTests
         result.Should().BeOfType<NoContentResult>();
     }
 
+    [Fact]
+    public async Task GetRiderBikesAsync_WithUnexistingRider_ReturnsEmptyList()
+    {
+        // Arrange
+        _garageStub
+            .Setup(garage => garage.GetBikesAsync())
+            .ReturnsAsync(Array.Empty<Bike>());
+
+        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+
+        // Act
+        var result = await controller.GetRiderBikesAsync(Guid.NewGuid());
+
+        // Assert
+        result.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetRiderBikesAsync_WithExistingRider_ReturnsExpectedBikes()
+    {
+        // Arrange
+        var riderId = Guid.NewGuid();
+        var expectedBikes = new[] { CreateRandomBike(), CreateRandomBike(), CreateRandomBike() };
+        foreach (var bike in expectedBikes)
+        {
+            bike.RiderId = riderId;
+        }
+
+        _garageStub
+            .Setup(garage => garage.GetBikesAsync())
+            .ReturnsAsync(expectedBikes);
+
+        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+
+        // Act
+        var result = await controller.GetRiderBikesAsync(riderId);
+
+        // Assert
+        result.Should().BeEquivalentTo(expectedBikes.Select(bike => bike.AsDto()));
+    }
+
+    [Fact]
+    public async Task UpdateRiderBikeAsync_WithUnexistingRider_ReturnsNotFound()
+    {
+        // Arrange
+        _garageStub
+            .Setup(garage => garage.GetRiderAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((Rider?)null!);
+
+        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+
+        // Act
+        var result = await controller.UpdateRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
+
+        // Assert
+        result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Fact]
+    public async Task UpdateRiderBikeAsync_WithUnexistingBike_ReturnsNotFound()
+    {
+        // Arrange
+        _garageStub
+            .Setup(garage => garage.GetBikeAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((Bike?)null!);
+
+        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+
+        // Act
+        var result = await controller.UpdateRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
+
+        // Assert
+        result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Fact]
+    public async Task UpdateRiderBikeAsync_WithExistingRiderAndBike_ReturnsNoContent()
+    {
+        // Arrange
+        var existingRider = CreateRandomRider();
+        var existingBike = CreateRandomBike();
+
+        _garageStub
+            .Setup(garage => garage.GetRiderAsync(existingRider.Id))
+            .ReturnsAsync(existingRider);
+
+        _garageStub
+            .Setup(garage => garage.GetBikeAsync(existingBike.Id))
+            .ReturnsAsync(existingBike);
+
+        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+
+        // Act
+        var result = await controller.UpdateRiderBikeAsync(existingRider.Id, existingBike.Id);
+
+        // Assert
+        result.Should().BeOfType<NoContentResult>();
+        existingBike.RiderId.Should().Be(existingRider.Id);
+    }
+
+    [Fact]
+    public async Task DeleteRiderBikeAsync_WithUnexistingRider_ReturnsNotFound()
+    {
+        // Arrange
+        _garageStub
+            .Setup(garage => garage.GetRiderAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((Rider?)null!);
+
+        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+
+        // Act
+        var result = await controller.DeleteRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
+
+        // Assert
+        result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Fact]
+    public async Task DeleteRiderBikeAsync_WithUnexistingBike_ReturnsNotFound()
+    {
+        // Arrange
+        _garageStub
+            .Setup(garage => garage.GetBikeAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((Bike?)null!);
+
+        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+
+        // Act
+        var result = await controller.DeleteRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
+
+        // Assert
+        result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Fact]
+    public async Task DeleteRiderBikeAsync_WithExistingRiderAndBike_ReturnsNoContent()
+    {
+        // Arrange
+        var existingRider = CreateRandomRider();
+        var existingBike = CreateRandomBike();
+
+        _garageStub
+            .Setup(garage => garage.GetRiderAsync(existingRider.Id))
+            .ReturnsAsync(existingRider);
+
+        _garageStub
+            .Setup(garage => garage.GetBikeAsync(existingBike.Id))
+            .ReturnsAsync(existingBike);
+
+        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+
+        // Act
+        var result = await controller.DeleteRiderBikeAsync(existingRider.Id, existingBike.Id);
+
+        // Assert
+        result.Should().BeOfType<NoContentResult>();
+        existingBike.RiderId.Should().BeNull();
+    }
+
     private Rider CreateRandomRider()
     {
         return new()
@@ -217,5 +376,21 @@ public class RiderControllerTests
         var start = new DateTime(1900, 1, 1);
         int range = (DateTime.Today - start).Days;
         return DateOnly.FromDateTime(start.AddDays(random.Next(range)));
+    }
+
+    private Bike CreateRandomBike()
+    {
+        return new()
+        {
+            Id = Guid.NewGuid(),
+            Brand = Guid.NewGuid().ToString(),
+            Model = Guid.NewGuid().ToString(),
+            Year = random.Next(1900, 2100),
+            Material = Guid.NewGuid().ToString(),
+            Color = Guid.NewGuid().ToString(),
+            Size = Guid.NewGuid().ToString(),
+            SerialNumber = Guid.NewGuid().ToString(),
+            CreationDate = DateTimeOffset.UtcNow
+        };
     }
 }
