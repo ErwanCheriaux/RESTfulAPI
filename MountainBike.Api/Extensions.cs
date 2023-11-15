@@ -20,11 +20,17 @@ public static class Extensions
 
     public static RiderDto AsDto(this Rider rider)
     {
+        return new(rider.Name);
+    }
+
+    public static RiderDetailsDto AsDetailsDto(this Rider rider, int bikeCount)
+    {
         return new(
             rider.Id,
             rider.Name,
             rider.Birthdate.AsAge(),
             rider.Country,
+            bikeCount,
             rider.CreationDate);
     }
 
