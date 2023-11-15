@@ -35,7 +35,7 @@ public class RiderController : ControllerBase
 
     // GET /riders/{id}
     [HttpGet("{id}")]
-    public async Task<ActionResult<RiderDto>> GetRiderAsync(Guid id)
+    public async Task<ActionResult<RiderDetailsDto>> GetRiderAsync(Guid id)
     {
         var rider = await _garage.GetRiderAsync(id);
 
@@ -44,12 +44,14 @@ public class RiderController : ControllerBase
             return NotFound();
         }
 
-        return rider.AsDto();
+        var riderbikes = (await _garage.GetBikesAsync()).Where(bike => bike.RiderId == id);
+
+        return rider.AsDetailsDto(riderbikes.Count());
     }
 
     // POST /riders
     [HttpPost]
-    public async Task<ActionResult<RiderDto>> CreateRiderAsync(CreateRiderDto riderDto)
+    public async Task<ActionResult<RiderDetailsDto>> CreateRiderAsync(CreateRiderDto riderDto)
     {
         Rider rider = new()
         {
@@ -62,7 +64,7 @@ public class RiderController : ControllerBase
 
         await _garage.CreateRiderAsync(rider);
 
-        return CreatedAtAction(nameof(GetRiderAsync), new { Id = rider.Id }, rider.AsDto());
+        return CreatedAtAction(nameof(GetRiderAsync), new { Id = rider.Id }, rider.AsDetailsDto(bikeCount: 0));
     }
 
     // PUT /riders/{id}

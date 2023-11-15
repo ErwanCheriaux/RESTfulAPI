@@ -36,10 +36,15 @@ public record UpdateBikeDto(
 );
 
 public record RiderDto(
+    string? Name
+);
+
+public record RiderDetailsDto(
     Guid Id,
     string? Name,
     int Age,
     string? Country,
+    int BikeCount,
     DateTimeOffset CreationDate
 );
 

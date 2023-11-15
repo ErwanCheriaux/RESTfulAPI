@@ -108,7 +108,7 @@ public class RiderControllerTests
         // Assert
         result.Result.Should().BeEquivalentTo(riderToCreate, option => option.ExcludingMissingMembers());
 
-        var createdRider = ((result.Result as CreatedAtActionResult)!.Value as RiderDto)!;
+        var createdRider = ((result.Result as CreatedAtActionResult)!.Value as RiderDetailsDto)!;
         createdRider.Id.Should().NotBeEmpty();
         createdRider.Age.Should().Be(riderToCreate.Birthdate.AsAge());
         createdRider.CreationDate.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromMilliseconds(1000));
