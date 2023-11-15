@@ -13,7 +13,6 @@ public class BikeControllerTests
 {
     private readonly Mock<IGarage> _garageStub = new();
     private readonly Mock<ILogger<BikeController>> _loggerStub = new();
-    private readonly Random random = new();
 
     [Fact]
     public async Task GetBikeAsync_WithUnexistingBike_ReturnsNotFound()
@@ -36,7 +35,7 @@ public class BikeControllerTests
     public async Task GetBikeAsync_WithExistingBike_ReturnsExpectedBike()
     {
         // Arrange
-        var expectedBike = CreateRandomBike();
+        var expectedBike = CreateRandom.Bike();
 
         _garageStub
             .Setup(garage => garage.GetBikeAsync(expectedBike.Id))
@@ -55,7 +54,7 @@ public class BikeControllerTests
     public async Task GetBikesAsync_WithExistingBikes_ReturnsAllBikes()
     {
         // Arrange
-        var expectedBikes = new[] { CreateRandomBike(), CreateRandomBike(), CreateRandomBike() };
+        var expectedBikes = new[] { CreateRandom.Bike(), CreateRandom.Bike(), CreateRandom.Bike() };
 
         _garageStub
             .Setup(garage => garage.GetBikesAsync())
@@ -100,7 +99,7 @@ public class BikeControllerTests
     public async Task CreateBikeAsync_WithBiketoCreate_ReturnsCreatedBike()
     {
         // Arrange
-        var bikeToCreate = CreateRandomCreateBikeDto();
+        var bikeToCreate = CreateRandom.CreateBikeDto();
         var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
 
         // Act
@@ -117,7 +116,7 @@ public class BikeControllerTests
     public async Task UpdateBikeAsync_WithUnexistingBike_ReturnsNotFound()
     {
         // Arrange
-        var bikeToUpdate = CreateRandomUpdateBikeDto();
+        var bikeToUpdate = CreateRandom.UpdateBikeDto();
         var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
 
         // Act
@@ -131,8 +130,8 @@ public class BikeControllerTests
     public async Task UpdateBikeAsync_WithExistingBike_ReturnsNoContent()
     {
         // Arrange
-        var existingbike = CreateRandomBike();
-        var bikeToUpdate = CreateRandomUpdateBikeDto();
+        var existingbike = CreateRandom.Bike();
+        var bikeToUpdate = CreateRandom.UpdateBikeDto();
         _garageStub
             .Setup(garage => garage.GetBikeAsync(existingbike.Id))
             .ReturnsAsync(existingbike);
@@ -163,7 +162,7 @@ public class BikeControllerTests
     public async Task DeleteBikeAsync_WithExistingBike_ReturnsNoContent()
     {
         // Arrange
-        var existingBike = CreateRandomBike();
+        var existingBike = CreateRandom.Bike();
         _garageStub
             .Setup(garage => garage.GetBikeAsync(existingBike.Id))
             .ReturnsAsync(existingBike);
@@ -175,47 +174,5 @@ public class BikeControllerTests
 
         // Assert
         result.Should().BeOfType<NoContentResult>();
-    }
-
-    private Bike CreateRandomBike()
-    {
-        return new()
-        {
-            Id = Guid.NewGuid(),
-            Brand = Guid.NewGuid().ToString(),
-            Model = Guid.NewGuid().ToString(),
-            Year = random.Next(1900, 2100),
-            Material = Guid.NewGuid().ToString(),
-            Color = Guid.NewGuid().ToString(),
-            Size = Guid.NewGuid().ToString(),
-            SerialNumber = Guid.NewGuid().ToString(),
-            CreationDate = DateTimeOffset.UtcNow
-        };
-    }
-
-    private CreateBikeDto CreateRandomCreateBikeDto()
-    {
-        return new(
-            Guid.NewGuid().ToString(),
-            Guid.NewGuid().ToString(),
-            random.Next(1900, 2100),
-            Guid.NewGuid().ToString(),
-            Guid.NewGuid().ToString(),
-            Guid.NewGuid().ToString(),
-            Guid.NewGuid().ToString()
-        );
-    }
-
-    private UpdateBikeDto CreateRandomUpdateBikeDto()
-    {
-        return new(
-            Guid.NewGuid().ToString(),
-            Guid.NewGuid().ToString(),
-            random.Next(1900, 2100),
-            Guid.NewGuid().ToString(),
-            Guid.NewGuid().ToString(),
-            Guid.NewGuid().ToString(),
-            Guid.NewGuid().ToString()
-        );
     }
 }
