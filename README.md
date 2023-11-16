@@ -4,7 +4,8 @@ Save data with **MongoDB** (**Docker container**).
 Developed with **Visual Studio Code**.  
 
 MountainBike project is built into a **Docker image** and orchestrated with **Kubernetes**.  
-**Loadbalancing** tested with Postman (hint: disable keep-alive connection header).
+**Loadbalancing** tested with Postman (hint: disable keep-alive connection header).  
+Authentication managed with a static API Key (Header: x-api-key).  
 
 ## CLI
 Create a new ASP.NET Core Web API project template
@@ -46,10 +47,11 @@ Run a MongoDB container in Docker with a mongodbdata volume and mongoadmin crede
 docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=mongoadmin mongo
 ```
 
-Save MongoDB password into .Net Secret Manager 
+Save MongoDB password and API Key into .Net Secret Manager 
 ```console
 dotnet user-secrets init
 dotnet user-secrets set MongoDBSettings:Password mongoadmin
+dotnet user-secrets set Authentication:ApiKey 6068b514-2776-400d-9e46-1333962a27b6
 ```
 
 Build the MountainBike project into a docker image

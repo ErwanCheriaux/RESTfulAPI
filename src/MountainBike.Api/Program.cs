@@ -8,6 +8,7 @@ using MongoDB.Driver;
 using MountainBike.Services.Settings;
 using MountainBike.Services.Repositories;
 using MountainBike.Services.Services;
+using MountainBike.Api.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,6 +52,7 @@ if (app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
+app.UseMiddleware<AuthMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
