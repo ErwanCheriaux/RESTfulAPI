@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using MountainBike.Api.DataAccess;
-using MountainBike.Api.Models;
+using MountainBike.Services.Entities;
+using MountainBike.Services.Repositories;
 
 namespace MountainBike.Api.Controllers;
 
@@ -8,12 +8,12 @@ namespace MountainBike.Api.Controllers;
 [Route("bikes")]
 public class BikeController : ControllerBase
 {
-    private readonly IGarage _garage;
+    private readonly IBikeRepository _bikeRepository;
     private readonly ILogger<BikeController> _logger;
 
-    public BikeController(IGarage garage, ILogger<BikeController> logger)
+    public BikeController(IBikeRepository bikeRepository, ILogger<BikeController> logger)
     {
-        _garage = garage;
+        _bikeRepository = bikeRepository;
         _logger = logger;
     }
 
@@ -21,7 +21,7 @@ public class BikeController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<BikeDto>> GetBikesAsync(string? Brand = null)
     {
-        var bikes = (await _garage.GetBikesAsync()).Select(bikes => bikes.AsDto());
+        var bikes = (await _bikeRepository.GetBikesAsync()).Select(bikes => bikes.AsDto());
 
         if (!string.IsNullOrWhiteSpace(Brand))
         {
@@ -37,7 +37,7 @@ public class BikeController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<BikeDto>> GetBikeAsync(Guid id)
     {
-        var bike = await _garage.GetBikeAsync(id);
+        var bike = await _bikeRepository.GetBikeAsync(id);
 
         if (bike is null)
         {
@@ -51,7 +51,7 @@ public class BikeController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<BikeDto>> CreateBikeAsync(CreateBikeDto bikeDto)
     {
-        Bike bike = new()
+        BikeEntity bike = new()
         {
             Id = Guid.NewGuid(),
             Brand = bikeDto.Brand,
@@ -64,7 +64,7 @@ public class BikeController : ControllerBase
             CreationDate = DateTimeOffset.UtcNow
         };
 
-        await _garage.CreateBikeAsync(bike);
+        await _bikeRepository.CreateBikeAsync(bike);
 
         return CreatedAtAction(nameof(GetBikeAsync), new { Id = bike.Id }, bike.AsDto());
     }
@@ -73,7 +73,7 @@ public class BikeController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateBikeAsync(Guid id, UpdateBikeDto bikeDto)
     {
-        var existingBike = await _garage.GetBikeAsync(id);
+        var existingBike = await _bikeRepository.GetBikeAsync(id);
 
         if (existingBike is null)
         {
@@ -88,7 +88,7 @@ public class BikeController : ControllerBase
         existingBike.Size = bikeDto.Size;
         existingBike.SerialNumber = bikeDto.SerialNumber;
 
-        await _garage.UpdateBikeAsync(existingBike);
+        await _bikeRepository.UpdateBikeAsync(existingBike);
 
         return NoContent();
     }
@@ -97,14 +97,14 @@ public class BikeController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteBikeAsync(Guid id)
     {
-        var existingBike = await _garage.GetBikeAsync(id);
+        var existingBike = await _bikeRepository.GetBikeAsync(id);
 
         if (existingBike is null)
         {
             return NotFound();
         }
 
-        await _garage.DeleteBikeAsync(id);
+        await _bikeRepository.DeleteBikeAsync(id);
 
         return NoContent();
     }

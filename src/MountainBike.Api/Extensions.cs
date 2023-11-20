@@ -1,10 +1,10 @@
-using MountainBike.Api.Models;
+using MountainBike.Services.Entities;
 
 namespace MountainBike.Api;
 
 public static class Extensions
 {
-    public static BikeDto AsDto(this Bike bike)
+    public static BikeDto AsDto(this BikeEntity bike)
     {
         return new(
             bike.Id,
@@ -18,12 +18,12 @@ public static class Extensions
             bike.CreationDate);
     }
 
-    public static RiderDto AsDto(this Rider rider)
+    public static RiderDto AsDto(this RiderEntity rider)
     {
         return new(rider.Name);
     }
 
-    public static RiderDetailsDto AsDetailsDto(this Rider rider, int bikeCount)
+    public static RiderDetailsDto AsDetailsDto(this RiderEntity rider, int bikeCount)
     {
         return new(
             rider.Id,

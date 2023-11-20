@@ -57,7 +57,6 @@ public record CreateRiderDto(
     public DateOnly Birthdate { get; init; }
 }
 
-
 public record UpdateRiderDto(
     [Required] string? Name,
     string? Country
