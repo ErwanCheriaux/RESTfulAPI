@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MountainBike.Services.Entities;
-using MountainBike.Services.Repositories;
+using MountainBike.Services.Services;
 
 namespace MountainBike.Api.Controllers;
 
@@ -8,12 +8,14 @@ namespace MountainBike.Api.Controllers;
 [Route("riders")]
 public class RiderController : ControllerBase
 {
-    private readonly IRiderRepository _riderRepository;
+    private readonly IRiderService _riderService;
+    private readonly IBikeService _bikeService;
     private readonly ILogger<RiderController> _logger;
 
-    public RiderController(IRiderRepository riderRepository, ILogger<RiderController> logger)
+    public RiderController(IRiderService riderService, IBikeService bikeService, ILogger<RiderController> logger)
     {
-        _riderRepository = riderRepository;
+        _riderService = riderService;
+        _bikeService = bikeService;
         _logger = logger;
     }
 
@@ -21,7 +23,7 @@ public class RiderController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<RiderDto>> GetRidersAsync(string? Name = null)
     {
-        var riders = (await _riderRepository.GetRidersAsync()).Select(riders => riders.AsDto());
+        var riders = (await _riderService.GetRidersAsync()).Select(riders => riders.AsDto());
 
         if (!string.IsNullOrWhiteSpace(Name))
         {
@@ -37,17 +39,16 @@ public class RiderController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<RiderDetailsDto>> GetRiderAsync(Guid id)
     {
-        var rider = await _riderRepository.GetRiderAsync(id);
+        var rider = await _riderService.GetRiderAsync(id);
 
         if (rider is null)
         {
             return NotFound();
         }
 
-        //var riderbikes = (await _riderRepository.GetBikesAsync()).Where(bike => bike.RiderId == id);
+        var riderbikes = await _bikeService.GetBikesByRiderIdAsync(id);
 
-        //return rider.AsDetailsDto(riderbikes.Count());
-        return rider.AsDetailsDto(0);
+        return Ok(rider.AsDetailsDto(riderbikes.Count()));
     }
 
     // POST /riders
@@ -63,7 +64,7 @@ public class RiderController : ControllerBase
             CreationDate = DateTimeOffset.UtcNow
         };
 
-        await _riderRepository.CreateRiderAsync(rider);
+        await _riderService.CreateRiderAsync(rider);
 
         return CreatedAtAction(nameof(GetRiderAsync), new { Id = rider.Id }, rider.AsDetailsDto(bikeCount: 0));
     }
@@ -72,7 +73,7 @@ public class RiderController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateRiderAsync(Guid id, UpdateRiderDto riderDto)
     {
-        var existingRider = await _riderRepository.GetRiderAsync(id);
+        var existingRider = await _riderService.GetRiderAsync(id);
 
         if (existingRider is null)
         {
@@ -83,7 +84,7 @@ public class RiderController : ControllerBase
         existingRider.Birthdate = riderDto.Birthdate;
         existingRider.Country = riderDto.Country;
 
-        await _riderRepository.UpdateRiderAsync(existingRider);
+        await _riderService.UpdateRiderAsync(existingRider);
 
         return NoContent();
     }
@@ -92,61 +93,87 @@ public class RiderController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteRiderAsync(Guid id)
     {
-        var existingRider = await _riderRepository.GetRiderAsync(id);
+        var existingRider = await _riderService.GetRiderAsync(id);
 
         if (existingRider is null)
         {
             return NotFound();
         }
 
-        await _riderRepository.DeleteRiderAsync(id);
+        await _riderService.DeleteRiderAsync(id);
 
         return NoContent();
     }
 
     // GET /riders/{rider_id}/bikes
-    // [HttpGet("{rider_id}/bikes")]
-    // public async Task<IEnumerable<BikeDto>> GetRiderBikesAsync(Guid rider_id)
-    // {
-    //     var riderbikes = (await _riderRepository.GetBikesAsync()).Where(bike => bike.RiderId == rider_id);
-    //     return riderbikes.Select(bike => bike.AsDto());
-    // }
+    [HttpGet("{rider_id}/bikes")]
+    public async Task<IEnumerable<BikeDto>> GetRiderBikesAsync(Guid rider_id)
+    {
+        var riderbikes = await _bikeService.GetBikesByRiderIdAsync(rider_id);
+        return riderbikes.Select(bike => bike.AsDto());
+    }
 
-    // PUT /riders/{rider_id}/bikes/{bike_id}
-    // [HttpPut("{rider_id}/bikes/{bike_id}")]
-    // public async Task<ActionResult> UpdateRiderBikeAsync(Guid rider_id, Guid bike_id)
-    // {
-    //     var rider = await _riderRepository.GetRiderAsync(rider_id);
-    //     var bike = await _riderRepository.GetBikeAsync(bike_id);
+    //
+    // Summary:
+    //     Map a rider and a bike in the repository.
+    //
+    // Parameters:
+    //     rider_id: 
+    //         Rider collecting the bike_id
+    //
+    //     bike_id:
+    //         Bike received by rider_id
+    //
+    // Endpoint:
+    //     PUT /riders/{rider_id}/bikes/{bike_id}
+    //
+    [HttpPut("{rider_id}/bikes/{bike_id}")]
+    public async Task<ActionResult> AddRiderBikeAsync(Guid rider_id, Guid bike_id)
+    {
+        var rider = await _riderService.GetRiderAsync(rider_id);
+        var bike = await _bikeService.GetBikeAsync(bike_id);
 
-    //     if (rider is null || bike is null)
-    //     {
-    //         return NotFound();
-    //     }
+        if (rider is null || bike is null)
+        {
+            return NotFound();
+        }
 
-    //     bike.RiderId = rider_id;
+        bike.RiderId = rider_id;
 
-    //     await _riderRepository.UpdateBikeAsync(bike);
+        await _bikeService.UpdateBikeAsync(bike);
 
-    //     return NoContent();
-    // }
+        return NoContent();
+    }
 
-    // DELETE /riders/{rider_id}/bikes/{bike_id}
-    // [HttpDelete("{rider_id}/bikes/{bike_id}")]
-    // public async Task<ActionResult> DeleteRiderBikeAsync(Guid rider_id, Guid bike_id)
-    // {
-    //     var rider = await _riderRepository.GetRiderAsync(rider_id);
-    //     var bike = await _riderRepository.GetBikeAsync(bike_id);
+    //
+    // Summary:
+    //     Unmap a rider and a bike in the repository.
+    //
+    // Parameters:
+    //     rider_id: 
+    //         Rider loosing the bike_id
+    //
+    //     bike_id:
+    //         Bike removed from rider_id
+    //
+    // Endpoint:
+    //     DELETE /riders/{rider_id}/bikes/{bike_id}
+    //
+    [HttpDelete("{rider_id}/bikes/{bike_id}")]
+    public async Task<ActionResult> RemoveRiderBikeAsync(Guid rider_id, Guid bike_id)
+    {
+        var rider = await _riderService.GetRiderAsync(rider_id);
+        var bike = await _bikeService.GetBikeAsync(bike_id);
 
-    //     if (rider is null || bike is null)
-    //     {
-    //         return NotFound();
-    //     }
+        if (rider is null || bike is null)
+        {
+            return NotFound();
+        }
 
-    //     bike.RiderId = null;
+        bike.RiderId = null;
 
-    //     await _riderRepository.UpdateBikeAsync(bike);
+        await _bikeService.UpdateBikeAsync(bike);
 
-    //     return NoContent();
-    // }
+        return NoContent();
+    }
 }

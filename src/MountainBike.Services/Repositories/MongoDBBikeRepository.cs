@@ -39,12 +39,6 @@ public class MongoDBBikeRepository : IBikeRepository
         return await _bikesCollection.Find(new BsonDocument()).ToListAsync();
     }
 
-    public void UpdateBike(BikeEntity bike)
-    {
-        var filter = _bikesFilterBuilder.Eq(existingBike => existingBike.Id, bike.Id);
-        _bikesCollection.ReplaceOne(filter, bike);
-    }
-
     public async Task UpdateBikeAsync(BikeEntity bike)
     {
         var filter = _bikesFilterBuilder.Eq(existingBike => existingBike.Id, bike.Id);

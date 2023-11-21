@@ -20,7 +20,10 @@ public static class Extensions
 
     public static RiderDto AsDto(this RiderEntity rider)
     {
-        return new(rider.Name);
+        return new(
+            rider.Id,
+            rider.Name,
+            rider.CreationDate);
     }
 
     public static RiderDetailsDto AsDetailsDto(this RiderEntity rider, int bikeCount)
