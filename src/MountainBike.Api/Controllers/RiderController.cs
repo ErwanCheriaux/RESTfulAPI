@@ -48,7 +48,7 @@ public class RiderController : ControllerBase
 
         var riderbikes = await _bikeService.GetBikesByRiderIdAsync(id);
 
-        return Ok(rider.AsDetailsDto(riderbikes.Count()));
+        return rider.AsDetailsDto(riderbikes.Count());
     }
 
     // POST /riders

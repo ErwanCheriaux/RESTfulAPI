@@ -3,27 +3,28 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using MountainBike.Api.Controllers;
-using MountainBike.Api.DataAccess;
 using MountainBike.Api;
-using MountainBike.Api.Models;
+using MountainBike.Services.Services;
+using MountainBike.Services.Entities;
 
 namespace MountainBike.UnitTests;
 
 public class RiderControllerTests
 {
-    private readonly Mock<IGarage> _garageStub = new();
-    private readonly Mock<ILogger<RiderController>> _loggerStub = new();
+    private readonly Mock<IRiderService> _mockRiderService = new();
+    private readonly Mock<IBikeService> _mockBikeService = new();
+    private readonly Mock<ILogger<RiderController>> _mockLogger = new();
     private readonly Random random = new();
 
     [Fact]
     public async Task GetRiderAsync_WithUnexistingRider_ReturnsNotFound()
     {
         // Arrange
-        _garageStub
-            .Setup(garage => garage.GetRiderAsync(It.IsAny<Guid>()))
-            .ReturnsAsync((Rider?)null!);
+        _mockRiderService
+            .Setup(service => service.GetRiderAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((RiderEntity?)null!);
 
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.GetRiderAsync(Guid.NewGuid());
@@ -38,11 +39,11 @@ public class RiderControllerTests
         // Arrange
         var expectedRider = CreateRandom.Rider();
 
-        _garageStub
-            .Setup(garage => garage.GetRiderAsync(expectedRider.Id))
+        _mockRiderService
+            .Setup(service => service.GetRiderAsync(expectedRider.Id))
             .ReturnsAsync(expectedRider);
 
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.GetRiderAsync(expectedRider.Id);
@@ -57,11 +58,11 @@ public class RiderControllerTests
         // Arrange
         var expectedRiders = new[] { CreateRandom.Rider(), CreateRandom.Rider(), CreateRandom.Rider() };
 
-        _garageStub
-            .Setup(garage => garage.GetRidersAsync())
+        _mockRiderService
+            .Setup(service => service.GetRidersAsync())
             .ReturnsAsync(expectedRiders);
 
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.GetRidersAsync();
@@ -77,16 +78,16 @@ public class RiderControllerTests
         string matchingRiderName = "bra";
         var allRiders = new[]
         {
-            new Rider(){Name = "Erwan"},
-            new Rider(){Name = "Brad"},
-            new Rider(){Name = "Lars"}
+            new RiderEntity(){Name = "Erwan"},
+            new RiderEntity(){Name = "Brad"},
+            new RiderEntity(){Name = "Lars"}
          };
 
-        _garageStub
-            .Setup(garage => garage.GetRidersAsync())
+        _mockRiderService
+            .Setup(service => service.GetRidersAsync())
             .ReturnsAsync(allRiders);
 
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.GetRidersAsync(matchingRiderName);
@@ -100,7 +101,7 @@ public class RiderControllerTests
     {
         // Arrange
         var riderToCreate = CreateRandom.CreateRiderDto();
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.CreateRiderAsync(riderToCreate);
@@ -119,7 +120,7 @@ public class RiderControllerTests
     {
         // Arrange
         var riderToUpdate = CreateRandom.UpdateRiderDto();
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.UpdateRiderAsync(Guid.NewGuid(), riderToUpdate);
@@ -134,11 +135,11 @@ public class RiderControllerTests
         // Arrange
         var existingrider = CreateRandom.Rider();
         var riderToUpdate = CreateRandom.UpdateRiderDto();
-        _garageStub
-            .Setup(garage => garage.GetRiderAsync(existingrider.Id))
+        _mockRiderService
+            .Setup(service => service.GetRiderAsync(existingrider.Id))
             .ReturnsAsync(existingrider);
 
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.UpdateRiderAsync(existingrider.Id, riderToUpdate);
@@ -151,7 +152,7 @@ public class RiderControllerTests
     public async Task DeleteRiderAsync_WithUnexistingRider_ReturnsNotFound()
     {
         // Arrange
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.DeleteRiderAsync(Guid.NewGuid());
@@ -165,11 +166,11 @@ public class RiderControllerTests
     {
         // Arrange
         var existingRider = CreateRandom.Rider();
-        _garageStub
-            .Setup(garage => garage.GetRiderAsync(existingRider.Id))
+        _mockRiderService
+            .Setup(service => service.GetRiderAsync(existingRider.Id))
             .ReturnsAsync(existingRider);
 
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.DeleteRiderAsync(existingRider.Id);
@@ -182,11 +183,11 @@ public class RiderControllerTests
     public async Task GetRiderBikesAsync_WithUnexistingRider_ReturnsEmptyList()
     {
         // Arrange
-        _garageStub
-            .Setup(garage => garage.GetBikesAsync())
-            .ReturnsAsync(Array.Empty<Bike>());
+        _mockBikeService
+            .Setup(service => service.GetBikesAsync())
+            .ReturnsAsync(Array.Empty<BikeEntity>());
 
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.GetRiderBikesAsync(Guid.NewGuid());
@@ -206,11 +207,11 @@ public class RiderControllerTests
             bike.RiderId = riderId;
         }
 
-        _garageStub
-            .Setup(garage => garage.GetBikesAsync())
+        _mockBikeService
+            .Setup(service => service.GetBikesByRiderIdAsync(riderId))
             .ReturnsAsync(expectedBikes);
 
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.GetRiderBikesAsync(riderId);
@@ -220,58 +221,58 @@ public class RiderControllerTests
     }
 
     [Fact]
-    public async Task UpdateRiderBikeAsync_WithUnexistingRider_ReturnsNotFound()
+    public async Task AddRiderBikeAsync_WithUnexistingRider_ReturnsNotFound()
     {
         // Arrange
-        _garageStub
-            .Setup(garage => garage.GetRiderAsync(It.IsAny<Guid>()))
-            .ReturnsAsync((Rider?)null!);
+        _mockRiderService
+            .Setup(service => service.GetRiderAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((RiderEntity?)null!);
 
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
-        var result = await controller.UpdateRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
+        var result = await controller.AddRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
     }
 
     [Fact]
-    public async Task UpdateRiderBikeAsync_WithUnexistingBike_ReturnsNotFound()
+    public async Task AddRiderBikeAsync_WithUnexistingBike_ReturnsNotFound()
     {
         // Arrange
-        _garageStub
-            .Setup(garage => garage.GetBikeAsync(It.IsAny<Guid>()))
-            .ReturnsAsync((Bike?)null!);
+        _mockBikeService
+            .Setup(service => service.GetBikeAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((BikeEntity?)null!);
 
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
-        var result = await controller.UpdateRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
+        var result = await controller.AddRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
     }
 
     [Fact]
-    public async Task UpdateRiderBikeAsync_WithExistingRiderAndBike_ReturnsNoContent()
+    public async Task AddRiderBikeAsync_WithExistingRiderAndBike_ReturnsNoContent()
     {
         // Arrange
         var existingRider = CreateRandom.Rider();
         var existingBike = CreateRandom.Bike();
 
-        _garageStub
-            .Setup(garage => garage.GetRiderAsync(existingRider.Id))
+        _mockRiderService
+            .Setup(service => service.GetRiderAsync(existingRider.Id))
             .ReturnsAsync(existingRider);
 
-        _garageStub
-            .Setup(garage => garage.GetBikeAsync(existingBike.Id))
+        _mockBikeService
+            .Setup(service => service.GetBikeAsync(existingBike.Id))
             .ReturnsAsync(existingBike);
 
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
-        var result = await controller.UpdateRiderBikeAsync(existingRider.Id, existingBike.Id);
+        var result = await controller.AddRiderBikeAsync(existingRider.Id, existingBike.Id);
 
         // Assert
         result.Should().BeOfType<NoContentResult>();
@@ -279,58 +280,58 @@ public class RiderControllerTests
     }
 
     [Fact]
-    public async Task DeleteRiderBikeAsync_WithUnexistingRider_ReturnsNotFound()
+    public async Task RemoveRiderBikeAsync_WithUnexistingRider_ReturnsNotFound()
     {
         // Arrange
-        _garageStub
-            .Setup(garage => garage.GetRiderAsync(It.IsAny<Guid>()))
-            .ReturnsAsync((Rider?)null!);
+        _mockRiderService
+            .Setup(service => service.GetRiderAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((RiderEntity?)null!);
 
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
-        var result = await controller.DeleteRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
+        var result = await controller.RemoveRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
     }
 
     [Fact]
-    public async Task DeleteRiderBikeAsync_WithUnexistingBike_ReturnsNotFound()
+    public async Task RemoveRiderBikeAsync_WithUnexistingBike_ReturnsNotFound()
     {
         // Arrange
-        _garageStub
-            .Setup(garage => garage.GetBikeAsync(It.IsAny<Guid>()))
-            .ReturnsAsync((Bike?)null!);
+        _mockBikeService
+            .Setup(service => service.GetBikeAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((BikeEntity?)null!);
 
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
-        var result = await controller.DeleteRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
+        var result = await controller.RemoveRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
     }
 
     [Fact]
-    public async Task DeleteRiderBikeAsync_WithExistingRiderAndBike_ReturnsNoContent()
+    public async Task RemoveRiderBikeAsync_WithExistingRiderAndBike_ReturnsNoContent()
     {
         // Arrange
         var existingRider = CreateRandom.Rider();
         var existingBike = CreateRandom.Bike();
 
-        _garageStub
-            .Setup(garage => garage.GetRiderAsync(existingRider.Id))
+        _mockRiderService
+            .Setup(service => service.GetRiderAsync(existingRider.Id))
             .ReturnsAsync(existingRider);
 
-        _garageStub
-            .Setup(garage => garage.GetBikeAsync(existingBike.Id))
+        _mockBikeService
+            .Setup(service => service.GetBikeAsync(existingBike.Id))
             .ReturnsAsync(existingBike);
 
-        var controller = new RiderController(_garageStub.Object, _loggerStub.Object);
+        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
-        var result = await controller.DeleteRiderBikeAsync(existingRider.Id, existingBike.Id);
+        var result = await controller.RemoveRiderBikeAsync(existingRider.Id, existingBike.Id);
 
         // Assert
         result.Should().BeOfType<NoContentResult>();

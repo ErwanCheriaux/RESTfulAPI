@@ -3,26 +3,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using MountainBike.Api.Controllers;
-using MountainBike.Api.DataAccess;
 using MountainBike.Api;
-using MountainBike.Api.Models;
+using MountainBike.Services.Services;
+using MountainBike.Services.Entities;
 
 namespace MountainBike.UnitTests;
 
 public class BikeControllerTests
 {
-    private readonly Mock<IGarage> _garageStub = new();
-    private readonly Mock<ILogger<BikeController>> _loggerStub = new();
+    private readonly Mock<IBikeService> _mockBikeService = new();
+    private readonly Mock<ILogger<BikeController>> _mockLogger = new();
 
     [Fact]
     public async Task GetBikeAsync_WithUnexistingBike_ReturnsNotFound()
     {
         // Arrange
-        _garageStub
-            .Setup(garage => garage.GetBikeAsync(It.IsAny<Guid>()))
-            .ReturnsAsync((Bike?)null!);
+        _mockBikeService
+            .Setup(service => service.GetBikeAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((BikeEntity?)null!);
 
-        var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
+        var controller = new BikeController(_mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.GetBikeAsync(Guid.NewGuid());
@@ -37,11 +37,11 @@ public class BikeControllerTests
         // Arrange
         var expectedBike = CreateRandom.Bike();
 
-        _garageStub
-            .Setup(garage => garage.GetBikeAsync(expectedBike.Id))
+        _mockBikeService
+            .Setup(service => service.GetBikeAsync(expectedBike.Id))
             .ReturnsAsync(expectedBike);
 
-        var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
+        var controller = new BikeController(_mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.GetBikeAsync(expectedBike.Id);
@@ -56,11 +56,11 @@ public class BikeControllerTests
         // Arrange
         var expectedBikes = new[] { CreateRandom.Bike(), CreateRandom.Bike(), CreateRandom.Bike() };
 
-        _garageStub
-            .Setup(garage => garage.GetBikesAsync())
+        _mockBikeService
+            .Setup(service => service.GetBikesAsync())
             .ReturnsAsync(expectedBikes);
 
-        var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
+        var controller = new BikeController(_mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var results = await controller.GetBikesAsync();
@@ -76,16 +76,16 @@ public class BikeControllerTests
         string matchingBikeBrand = "santa";
         var allBikes = new[]
         {
-            new Bike(){Brand = "Santa Cruz"},
-            new Bike(){Brand = "Yeti"},
-            new Bike(){Brand = "santa monica"}
+            new BikeEntity(){Brand = "Santa Cruz"},
+            new BikeEntity(){Brand = "Yeti"},
+            new BikeEntity(){Brand = "santa monica"}
          };
 
-        _garageStub
-            .Setup(garage => garage.GetBikesAsync())
+        _mockBikeService
+            .Setup(service => service.GetBikesAsync())
             .ReturnsAsync(allBikes);
 
-        var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
+        var controller = new BikeController(_mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var results = await controller.GetBikesAsync(matchingBikeBrand);
@@ -100,7 +100,7 @@ public class BikeControllerTests
     {
         // Arrange
         var bikeToCreate = CreateRandom.CreateBikeDto();
-        var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
+        var controller = new BikeController(_mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.CreateBikeAsync(bikeToCreate);
@@ -117,7 +117,7 @@ public class BikeControllerTests
     {
         // Arrange
         var bikeToUpdate = CreateRandom.UpdateBikeDto();
-        var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
+        var controller = new BikeController(_mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.UpdateBikeAsync(Guid.NewGuid(), bikeToUpdate);
@@ -132,11 +132,11 @@ public class BikeControllerTests
         // Arrange
         var existingbike = CreateRandom.Bike();
         var bikeToUpdate = CreateRandom.UpdateBikeDto();
-        _garageStub
-            .Setup(garage => garage.GetBikeAsync(existingbike.Id))
+        _mockBikeService
+            .Setup(service => service.GetBikeAsync(existingbike.Id))
             .ReturnsAsync(existingbike);
 
-        var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
+        var controller = new BikeController(_mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.UpdateBikeAsync(existingbike.Id, bikeToUpdate);
@@ -149,7 +149,7 @@ public class BikeControllerTests
     public async Task DeleteBikeAsync_WithUnexistingBike_ReturnsNotFound()
     {
         // Arrange
-        var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
+        var controller = new BikeController(_mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.DeleteBikeAsync(Guid.NewGuid());
@@ -163,11 +163,11 @@ public class BikeControllerTests
     {
         // Arrange
         var existingBike = CreateRandom.Bike();
-        _garageStub
-            .Setup(garage => garage.GetBikeAsync(existingBike.Id))
+        _mockBikeService
+            .Setup(service => service.GetBikeAsync(existingBike.Id))
             .ReturnsAsync(existingBike);
 
-        var controller = new BikeController(_garageStub.Object, _loggerStub.Object);
+        var controller = new BikeController(_mockBikeService.Object, _mockLogger.Object);
 
         // Act
         var result = await controller.DeleteBikeAsync(existingBike.Id);

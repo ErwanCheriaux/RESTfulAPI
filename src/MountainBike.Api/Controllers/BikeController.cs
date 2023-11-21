@@ -44,7 +44,7 @@ public class BikeController : ControllerBase
             return NotFound();
         }
 
-        return Ok(bike.AsDto());
+        return bike.AsDto();
     }
 
     // POST /bikes
