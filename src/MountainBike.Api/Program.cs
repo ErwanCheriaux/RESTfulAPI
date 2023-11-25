@@ -5,8 +5,9 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
-using MountainBike.Api.Settings;
-using MountainBike.Api.DataAccess;
+using MountainBike.Services.Settings;
+using MountainBike.Services.Repositories;
+using MountainBike.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,12 +21,17 @@ builder.Services.AddSingleton<IMongoClient>(ServiceProvider =>
     return new MongoClient(mongoDBsettings?.ConnectionString);
 });
 
-builder.Services.AddSingleton<IGarage, MongoDBGarage>();
+builder.Services.AddSingleton<IBikeRepository, MongoDBBikeRepository>();
+builder.Services.AddSingleton<IRiderRepository, MongoDBRiderRepository>();
+
+builder.Services.AddScoped<IBikeService, BikeService>();
+builder.Services.AddScoped<IRiderService, RiderService>();
 
 builder.Services.AddControllers(option =>
 {
     option.SuppressAsyncSuffixInActionNames = false;
 });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

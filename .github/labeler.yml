@@ -11,8 +11,11 @@ settings:
 api:
   - "MountainBike.Api/**/*.cs"
 
+web:
+  - "MountainBike.Web/**"
+
 test:
-  - "MountainBike.UnitTests/**/*.cs"
+  - "tests/**/*.cs"
 
 readme:
   - "README.md"

@@ -36,7 +36,9 @@ public record UpdateBikeDto(
 );
 
 public record RiderDto(
-    string? Name
+    Guid Id,
+    string? Name,
+    DateTimeOffset CreationDate
 );
 
 public record RiderDetailsDto(
@@ -48,21 +50,16 @@ public record RiderDetailsDto(
     DateTimeOffset CreationDate
 );
 
-public record CreateRiderDto(
-    [Required] string? Name,
-    string? Country
-)
+public record CreateRiderDto()
 {
-    [DateOnlyRange("1900-01-01", "2200-01-01")]
-    public DateOnly Birthdate { get; init; }
+    [Required] public string? Name { get; init; }
+    [DateOnlyRange("1900-01-01", "2200-01-01")] public DateOnly Birthdate { get; init; }
+    public string? Country { get; set; }
 }
 
-
-public record UpdateRiderDto(
-    [Required] string? Name,
-    string? Country
-)
+public record UpdateRiderDto()
 {
-    [DateOnlyRange("1900-01-01", "2200-01-01")]
-    public DateOnly Birthdate { get; init; }
+    [Required] public string? Name { get; init; }
+    [DateOnlyRange("1900-01-01", "2200-01-01")] public DateOnly Birthdate { get; init; }
+    public string? Country { get; set; }
 }

@@ -1,12 +1,12 @@
 using MountainBike.Api;
-using MountainBike.Api.Models;
+using MountainBike.Services.Entities;
 
 namespace MountainBike.UnitTests;
 
 public static class CreateRandom
 {
     private static readonly Random random = new();
-    public static Bike Bike()
+    public static BikeEntity Bike()
     {
         return new()
         {
@@ -48,7 +48,7 @@ public static class CreateRandom
         );
     }
 
-    public static Rider Rider()
+    public static RiderEntity Rider()
     {
         return new()
         {
@@ -62,23 +62,21 @@ public static class CreateRandom
 
     public static CreateRiderDto CreateRiderDto()
     {
-        return new(
-            Guid.NewGuid().ToString(),
-            Guid.NewGuid().ToString()
-        )
+        return new()
         {
+            Name = Guid.NewGuid().ToString(),
             Birthdate = RandomDateOnly(),
+            Country = Guid.NewGuid().ToString()
         };
     }
 
     public static UpdateRiderDto UpdateRiderDto()
     {
-        return new(
-            Guid.NewGuid().ToString(),
-            Guid.NewGuid().ToString()
-        )
+        return new()
         {
+            Name = Guid.NewGuid().ToString(),
             Birthdate = RandomDateOnly(),
+            Country = Guid.NewGuid().ToString()
         };
     }
 

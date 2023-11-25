@@ -1,6 +1,6 @@
-namespace MountainBike.Api.Models;
+namespace MountainBike.Services.Entities;
 
-public class Bike
+public class BikeEntity
 {
     public Guid Id { get; set; }
     public Guid? RiderId { get; set; }

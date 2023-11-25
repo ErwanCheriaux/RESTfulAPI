@@ -6,9 +6,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/MountainBike.Api/bin/Debug/net7.0/MountainBike.Api.dll",
+            "program": "${workspaceFolder}/src/MountainBike.Api/bin/Debug/net8.0/MountainBike.Api.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/MountainBike.Api",
+            "cwd": "${workspaceFolder}/src/MountainBike.Api",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
@@ -18,7 +18,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceFolder}/MountainBike.Api/Views"
+                "/Views": "${workspaceFolder}/src/MountainBike.Api/Views"
             }
         },
         {
@@ -32,7 +32,7 @@
             "request": "launch",
             "preLaunchTask": "docker-run: debug",
             "netCore": {
-                "appProject": "${workspaceFolder}/MountainBike.Api/MountainBike.Api.csproj"
+                "appProject": "${workspaceFolder}/src/MountainBike.Api/MountainBike.Api.csproj"
             }
         }
     ]
