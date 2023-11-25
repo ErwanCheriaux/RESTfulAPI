@@ -7,6 +7,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using MountainBike.Services.Settings;
 using MountainBike.Services.Repositories;
+using MountainBike.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,9 @@ builder.Services.AddSingleton<IMongoClient>(ServiceProvider =>
 
 builder.Services.AddSingleton<IBikeRepository, MongoDBBikeRepository>();
 builder.Services.AddSingleton<IRiderRepository, MongoDBRiderRepository>();
+
+builder.Services.AddScoped<IBikeService, BikeService>();
+builder.Services.AddScoped<IRiderService, RiderService>();
 
 builder.Services.AddControllers(option =>
 {
