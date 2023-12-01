@@ -45,6 +45,24 @@ export default function BikeTable() {
         }
     };
 
+    const handelBikeDelete = async (id) => {
+        try {
+            const response = await fetch('http://localhost:5075/bikes/' + id, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                let bikesCopy = [...bikes];
+                let bikesRemoved = bikesCopy.filter(bike => bike.id != id);
+                setBikes(bikesRemoved);
+            } else {
+                console.error('Failed to delete bike')
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
     return (
         <div>
             <h1>My Bike List</h1>
@@ -60,11 +78,12 @@ export default function BikeTable() {
                         <th>Color</th>
                         <th>Size</th>
                         <th>Serial number</th>
+                        <th></th>
                     </tr>
                 </thead>
-                {bikes.map((bike, index) => (
-                    <tbody>
-                        <tr>
+                <tbody>
+                    {bikes.map((bike, index) => (
+                        <tr key={index}>
                             <td>{bike.brand}</td>
                             <td>{bike.model}</td>
                             <td>{bike.year}</td>
@@ -72,9 +91,10 @@ export default function BikeTable() {
                             <td>{bike.color}</td>
                             <td>{bike.size}</td>
                             <td>{bike.serialNumber}</td>
+                            <td><button onClick={() => handelBikeDelete(bike.id)}>X</button></td>
                         </tr>
-                    </tbody>
-                ))}
+                    ))}
+                </tbody>
             </table>
 
             {/* BikeForm for adding a new bike */}
