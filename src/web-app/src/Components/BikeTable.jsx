@@ -53,7 +53,7 @@ export default function BikeTable() {
 
             if (response.ok) {
                 let bikesCopy = [...bikes];
-                let bikesRemoved = bikesCopy.filter(bike => bike.id != id);
+                let bikesRemoved = bikesCopy.filter(bike => bike.id !== id);
                 setBikes(bikesRemoved);
             } else {
                 console.error('Failed to delete bike')
