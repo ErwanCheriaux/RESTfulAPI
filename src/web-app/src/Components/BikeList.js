@@ -1,12 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BikeForm from './BikeForm';
 
 const BikeList = () => {
     const [bikes, setBikes] = useState([]);
 
-    const handleFormSubmit = (newBike) => {
-        // Assuming you want to add the new bike to the list
-        setBikes([...bikes, newBike]);
+    useEffect(() => {
+        // Fetch data from your .NET API when the component mounts
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:5075/bikes');
+                if (response.ok) {
+                    const data = await response.json();
+                    setBikes(data);
+                } else {
+                    console.error('Failed to fetch data from API');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchData();
+    }, []); // The empty dependency array ensures this effect runs only once when the component mounts
+
+
+    const handleFormSubmit = async (newBike) => {
+        try {
+            const response = await fetch('http://localhost:5075/bikes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newBike),
+            });
+
+            if (response.ok) {
+                const createdBike = await response.json();
+                setBikes([...bikes, createdBike]);
+            } else {
+                console.error('Failed to create bike');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     return (
