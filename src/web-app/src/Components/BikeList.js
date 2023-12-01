@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import BikeForm from './BikeForm';
 
-const BikeList = () => {
+export default function BikeList() {
     const [bikes, setBikes] = useState([]);
 
     useEffect(() => {
@@ -69,5 +69,3 @@ const BikeList = () => {
         </div>
     );
 };
-
-export default BikeList;

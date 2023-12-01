@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const BikeForm = ({ onSubmit }) => {
+export default function BikeForm(onSubmit) {
     const [formData, setFormData] = useState({
         brand: '',
         model: '',
@@ -69,5 +69,3 @@ const BikeForm = ({ onSubmit }) => {
         </form>
     );
 };
-
-export default BikeForm;
