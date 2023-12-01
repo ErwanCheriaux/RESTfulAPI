@@ -38,11 +38,11 @@ export default function BikeForm({ onSubmit }) {
         <form onSubmit={handleSubmit}>
             <label>
                 Brand:
-                <input type="text" name="brand" value={formData.brand} onChange={handleChange} />
+                <input autoFocus required type="text" name="brand" value={formData.brand} onChange={handleChange} />
             </label>
             <label>
                 Model:
-                <input type="text" name="model" value={formData.model} onChange={handleChange} />
+                <input required type="text" name="model" value={formData.model} onChange={handleChange} />
             </label>
             <label>
                 Year:
