@@ -1,10 +1,10 @@
 import './App.css';
-import BikeList from './Components/BikeList';
+import BikeTable from './Components/BikeTable';
 
 export default function App() {
   return (
     <div className="App">
-      <BikeList />
+      <BikeTable />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import BikeForm from './BikeForm';
 
-export default function BikeList() {
+export default function BikeTable() {
     const [bikes, setBikes] = useState([]);
 
     useEffect(() => {
@@ -49,20 +49,33 @@ export default function BikeList() {
         <div>
             <h1>My Bike List</h1>
 
-            {/* Display existing bikes */}
-            {bikes.map((bike, index) => (
-                <div key={index}>
-                    <p>ID: {bike.id}</p>
-                    <p>Brand: {bike.brand}</p>
-                    <p>Model: {bike.model}</p>
-                    <p>Year: {bike.year}</p>
-                    <p>Material: {bike.material}</p>
-                    <p>Color: {bike.color}</p>
-                    <p>Size: {bike.size}</p>
-                    <p>Serial Number: {bike.serialNumber}</p>
-                    <p>Creation Date: {bike.creationDate}</p>
-                </div>
-            ))}
+            {/* Display existing bikes in a table */}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Brand</th>
+                        <th>Model</th>
+                        <th>Year</th>
+                        <th>Material</th>
+                        <th>Color</th>
+                        <th>Size</th>
+                        <th>Serial number</th>
+                    </tr>
+                </thead>
+                {bikes.map((bike, index) => (
+                    <tbody>
+                        <tr>
+                            <td>{bike.brand}</td>
+                            <td>{bike.model}</td>
+                            <td>{bike.year}</td>
+                            <td>{bike.material}</td>
+                            <td>{bike.color}</td>
+                            <td>{bike.size}</td>
+                            <td>{bike.serialNumber}</td>
+                        </tr>
+                    </tbody>
+                ))}
+            </table>
 
             {/* BikeForm for adding a new bike */}
             <BikeForm onSubmit={handleFormSubmit} />
