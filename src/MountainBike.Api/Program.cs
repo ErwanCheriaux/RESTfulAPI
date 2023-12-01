@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
 BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
 var mongoDBsettings = builder.Configuration.GetSection(nameof(MongoDBSettings)).Get<MongoDBSettings>();
+var reactClientSettings = builder.Configuration.GetSection(nameof(ReactClientSettings)).Get<ReactClientSettings>();
 
 builder.Services.AddSingleton<IMongoClient>(ServiceProvider =>
 {
@@ -31,6 +32,14 @@ builder.Services.AddControllers(option =>
 {
     option.SuppressAsyncSuffixInActionNames = false;
 });
+
+builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowOrigin",
+            builder => builder.WithOrigins(reactClientSettings!.ConnectionString) // Add your React app's origin
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -49,6 +58,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseHttpsRedirection();
+    app.UseCors("AllowOrigin");
 }
 
 app.UseAuthorization();
