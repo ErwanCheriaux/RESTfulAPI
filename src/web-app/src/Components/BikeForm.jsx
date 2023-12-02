@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 export default function BikeForm({ onSubmit }) {
     const [formData, setFormData] = useState({
@@ -35,37 +39,41 @@ export default function BikeForm({ onSubmit }) {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>
-                Brand:
-                <input autoFocus required type="text" name="brand" value={formData.brand} onChange={handleChange} />
-            </label>
-            <label>
-                Model:
-                <input required type="text" name="model" value={formData.model} onChange={handleChange} />
-            </label>
-            <label>
-                Year:
-                <input type="number" name="year" value={formData.year} onChange={handleChange} />
-            </label>
-            <label>
-                Material:
-                <input type="text" name="material" value={formData.material} onChange={handleChange} />
-            </label>
-            <label>
-                Color:
-                <input type="text" name="color" value={formData.color} onChange={handleChange} />
-            </label>
-            <label>
-                Size:
-                <input type="text" name="size" value={formData.size} onChange={handleChange} />
-            </label>
-            <label>
-                Serial Number:
-                <input type="text" name="serialNumber" value={formData.serialNumber} onChange={handleChange} />
-            </label>
+        <Form onSubmit={handleSubmit}>
+            <Row className='mb-3'>
+                <Form.Group as={Col}>
+                    <Form.Label>Brand</Form.Label>
+                    <Form.Control autoFocus required type="text" name="brand" value={formData.brand} onChange={handleChange} />
+                </Form.Group>
+                <Form.Group as={Col}>
+                    <Form.Label>Model</Form.Label>
+                    <Form.Control required type="text" name="model" value={formData.model} onChange={handleChange} />
+                </Form.Group>
+                <Form.Group as={Col}>
+                    <Form.Label>Year</Form.Label>
+                    <Form.Control type="number" name="year" value={formData.year} onChange={handleChange} />
+                </Form.Group>
+            </Row>
+            <Row className='mb-3'>
+                <Form.Group as={Col}>
+                    <Form.Label>Material</Form.Label>
+                    <Form.Control type="text" name="material" value={formData.material} onChange={handleChange} />
+                </Form.Group>
+                <Form.Group as={Col}>
+                    <Form.Label>Color</Form.Label>
+                    <Form.Control type="text" name="color" value={formData.color} onChange={handleChange} />
+                </Form.Group>
+                <Form.Group as={Col}>
+                    <Form.Label>Size</Form.Label>
+                    <Form.Control type="text" name="size" value={formData.size} onChange={handleChange} />
+                </Form.Group>
+            </Row>
+            <Form.Group className="mb-3">
+                <Form.Label>Serial number</Form.Label>
+                <Form.Control type="text" name="serialNumber" value={formData.serialNumber} onChange={handleChange} />
+            </Form.Group>
 
-            <button type="submit">Submit</button>
-        </form>
+            <Button type="submit">Submit</Button>
+        </Form>
     );
 };

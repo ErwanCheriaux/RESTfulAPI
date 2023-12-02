@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Table from 'react-bootstrap/Table';
+import CloseButton from 'react-bootstrap/CloseButton';
 import BikeForm from './BikeForm';
 
 export default function BikeTable() {
@@ -68,7 +70,7 @@ export default function BikeTable() {
             <h1>My Bike List</h1>
 
             {/* Display existing bikes in a table */}
-            <table>
+            <Table hover size='sm'>
                 <thead>
                     <tr>
                         <th>Brand</th>
@@ -91,11 +93,11 @@ export default function BikeTable() {
                             <td>{bike.color}</td>
                             <td>{bike.size}</td>
                             <td>{bike.serialNumber}</td>
-                            <td><button onClick={() => handelBikeDelete(bike.id)}>X</button></td>
+                            <td><CloseButton onClick={() => handelBikeDelete(bike.id)} /></td>
                         </tr>
                     ))}
                 </tbody>
-            </table>
+            </Table>
 
             {/* BikeForm for adding a new bike */}
             <BikeForm onSubmit={handleFormSubmit} />

@@ -1,4 +1,3 @@
-import './App.css';
 import BikeTable from './Components/BikeTable';
 
 export default function App() {
