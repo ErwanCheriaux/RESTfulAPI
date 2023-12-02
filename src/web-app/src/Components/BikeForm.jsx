@@ -11,7 +11,7 @@ export default function BikeForm({ onSubmit }) {
         year: 2010,
         material: '',
         color: '',
-        size: '',
+        size: 'M',
         serialNumber: ''
     });
 
@@ -33,7 +33,7 @@ export default function BikeForm({ onSubmit }) {
             year: 2010,
             material: '',
             color: '',
-            size: '',
+            size: 'M',
             serialNumber: ''
         });
     };
@@ -65,7 +65,11 @@ export default function BikeForm({ onSubmit }) {
                 </Form.Group>
                 <Form.Group as={Col}>
                     <Form.Label>Size</Form.Label>
-                    <Form.Control type="text" name="size" value={formData.size} onChange={handleChange} />
+                    <Form.Select name='size' value={formData.size} onChange={handleChange} >
+                        {['XS', 'S', 'M', 'L', 'XL'].map((size) => (
+                            <option>{size}</option>
+                        ))}
+                    </Form.Select>
                 </Form.Group>
             </Row>
             <Form.Group className="mb-3">
