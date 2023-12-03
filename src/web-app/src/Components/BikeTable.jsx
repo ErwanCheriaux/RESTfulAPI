@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form } from 'react-bootstrap';
+import { Table, Button, } from 'react-bootstrap';
 import BikeForm from './BikeForm';
 import BikeEditModal from './BikeEditModal';
 
@@ -71,7 +71,7 @@ export default function BikeTable() {
 
             if (response.ok) {
                 let bikesCopy = [...bikes];
-                bikesCopy[bikesCopy.findIndex(bike => bike.id == updatedBike.id)] = updatedBike;
+                bikesCopy[bikesCopy.findIndex(bike => bike.id === updatedBike.id)] = updatedBike;
                 setBikes(bikesCopy);
             } else {
                 console.error('Failed to update bike')
