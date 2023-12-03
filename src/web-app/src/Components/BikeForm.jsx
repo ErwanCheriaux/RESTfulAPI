@@ -1,8 +1,8 @@
-import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react';
+import React, { useState } from 'react';
 import { Button, Form, Row, Col } from 'react-bootstrap';
 
 // export default function BikeForm({ onSubmit, ref, defaultValue = null, displaySubmitButton = true }) {
-const BikeForm = forwardRef(({ onSubmit, defaultValue = null, displaySubmitButton = true }, ref) => {
+const BikeForm = ({ formRef, onSubmit, defaultValue = null, displaySubmitButton = true }) => {
     const currentYear = new Date().getFullYear();
     const getDefaultFormData = () => {
         return {
@@ -18,19 +18,6 @@ const BikeForm = forwardRef(({ onSubmit, defaultValue = null, displaySubmitButto
 
     const [validated, setValidated] = useState(false);
     const [formData, setFormData] = useState(defaultValue || getDefaultFormData());
-
-    // Create a reference for the form
-    const formRef = useRef();
-
-    // Expose the submit method to parent component
-    useImperativeHandle(ref, () => ({
-        submit: () => {
-            // Trigger submit event on the form
-            if (formRef.current) {
-                formRef.current.requestSubmit();
-            }
-        }
-    }));
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -146,7 +133,7 @@ const BikeForm = forwardRef(({ onSubmit, defaultValue = null, displaySubmitButto
             <SubmitButton display={displaySubmitButton} />
         </Form >
     );
-});
+};
 
 const SubmitButton = ({ display }) => {
     return (display ? <Button type="submit">Submit</Button> : null);
