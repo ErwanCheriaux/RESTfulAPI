@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Form, Row, Col } from 'react-bootstrap';
 
 // export default function BikeForm({ onSubmit, ref, defaultValue = null, displaySubmitButton = true }) {
-const BikeForm = ({ formRef, onSubmit, defaultValue = null, displaySubmitButton = true }) => {
+export default function BikeForm({ formRef, onSubmit, defaultValue = null, displaySubmitButton = true }) {
     const currentYear = new Date().getFullYear();
     const getDefaultFormData = () => {
         return {
@@ -138,5 +138,3 @@ const BikeForm = ({ formRef, onSubmit, defaultValue = null, displaySubmitButton 
 const SubmitButton = ({ display }) => {
     return (display ? <Button type="submit">Submit</Button> : null);
 };
-
-export default BikeForm;

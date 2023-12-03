@@ -58,8 +58,27 @@ export default function BikeTable() {
     };
 
     const handleSaveModal = async (updatedBike) => {
-        //TODO
-        alert('handleSaveModal:updatedBike ' + updatedBike.brand);
+        setShowModal(false);
+
+        try {
+            const response = await fetch('http://localhost:5075/bikes/' + updatedBike.id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedBike),
+            });
+
+            if (response.ok) {
+                let bikesCopy = [...bikes];
+                bikesCopy[bikesCopy.findIndex(bike => bike.id == updatedBike.id)] = updatedBike;
+                setBikes(bikesCopy);
+            } else {
+                console.error('Failed to update bike')
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     const handelBikeDelete = async (id) => {
