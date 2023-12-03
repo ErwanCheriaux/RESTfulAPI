@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import Table from 'react-bootstrap/Table';
-import CloseButton from 'react-bootstrap/CloseButton';
+import { Table, Button, Modal, Form } from 'react-bootstrap';
 import BikeForm from './BikeForm';
+import BikeEditModal from './BikeEditModal';
 
 export default function BikeTable() {
     const [bikes, setBikes] = useState([]);
+    const [bikeEdit, setBikeEdit] = useState({});
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         // Fetch data from your .NET API when the component mounts
@@ -24,7 +26,6 @@ export default function BikeTable() {
 
         fetchData();
     }, []); // The empty dependency array ensures this effect runs only once when the component mounts
-
 
     const handleFormSubmit = async (newBike) => {
         try {
@@ -47,6 +48,20 @@ export default function BikeTable() {
         }
     };
 
+    const handelBikeEdit = async (existingBike) => {
+        setBikeEdit(existingBike);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+
+    const handleSaveModal = async (updatedBike) => {
+        //TODO
+        alert('handleSaveModal:updatedBike ' + updatedBike.brand);
+    };
+
     const handelBikeDelete = async (id) => {
         try {
             const response = await fetch('http://localhost:5075/bikes/' + id, {
@@ -66,7 +81,7 @@ export default function BikeTable() {
     };
 
     return (
-        <div>
+        <>
             <h1>My Bike List</h1>
 
             {/* Display existing bikes in a table */}
@@ -81,6 +96,7 @@ export default function BikeTable() {
                         <th>Size</th>
                         <th>Serial number</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -93,7 +109,8 @@ export default function BikeTable() {
                             <td>{bike.color}</td>
                             <td>{bike.size}</td>
                             <td>{bike.serialNumber}</td>
-                            <td><CloseButton onClick={() => handelBikeDelete(bike.id)} /></td>
+                            <td><Button variant="warning" onClick={() => handelBikeEdit(bike)}>Edit</Button></td>
+                            <td><Button variant="danger" onClick={() => handelBikeDelete(bike.id)}>Delete</Button></td>
                         </tr>
                     ))}
                 </tbody>
@@ -101,6 +118,11 @@ export default function BikeTable() {
 
             {/* BikeForm for adding a new bike */}
             <BikeForm onSubmit={handleFormSubmit} />
-        </div>
+            <BikeEditModal
+                bike={bikeEdit}
+                show={showModal}
+                onClickClose={handleCloseModal}
+                onClickSave={handleSaveModal} />
+        </>
     );
 };

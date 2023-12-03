@@ -1,21 +1,36 @@
-import React, { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react';
+import { Button, Form, Row, Col } from 'react-bootstrap';
 
-export default function BikeForm({ onSubmit }) {
+// export default function BikeForm({ onSubmit, ref, defaultValue = null, displaySubmitButton = true }) {
+const BikeForm = forwardRef(({ onSubmit, defaultValue = null, displaySubmitButton = true }, ref) => {
     const currentYear = new Date().getFullYear();
+    const getDefaultFormData = () => {
+        return {
+            brand: '',
+            model: '',
+            year: currentYear,
+            material: '',
+            color: '',
+            size: 'M',
+            serialNumber: '',
+        };
+    };
+
     const [validated, setValidated] = useState(false);
-    const [formData, setFormData] = useState({
-        brand: '',
-        model: '',
-        year: currentYear,
-        material: '',
-        color: '',
-        size: 'M',
-        serialNumber: ''
-    });
+    const [formData, setFormData] = useState(defaultValue || getDefaultFormData());
+
+    // Create a reference for the form
+    const formRef = useRef();
+
+    // Expose the submit method to parent component
+    useImperativeHandle(ref, () => ({
+        submit: () => {
+            // Trigger submit event on the form
+            if (formRef.current) {
+                formRef.current.requestSubmit();
+            }
+        }
+    }));
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -39,107 +54,102 @@ export default function BikeForm({ onSubmit }) {
         onSubmit(formData);
 
         // Reset the form after submission
-        setFormData({
-            brand: '',
-            model: '',
-            year: currentYear,
-            material: '',
-            color: '',
-            size: 'M',
-            serialNumber: ''
-        });
+        setFormData(getDefaultFormData());
 
         // Hide validation
         setValidated(false);
     };
 
     return (
-        <>
-            <h1>Add new bike</h1>
-            <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                <Row className='mb-3'>
-                    <Form.Group as={Col}>
-                        <Form.Label>Brand</Form.Label>
-                        <Form.Control
-                            autoFocus
-                            required
-                            type="text"
-                            name="brand"
-                            value={formData.brand}
-                            placeholder='Transition...'
-                            onChange={handleChange} />
-                        <Form.Control.Feedback type="invalid">
-                            Please provide a brand.
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group as={Col}>
-                        <Form.Label>Model</Form.Label>
-                        <Form.Control
-                            required
-                            type="text"
-                            name="model"
-                            value={formData.model}
-                            placeholder='Patrol...'
-                            onChange={handleChange} />
-                        <Form.Control.Feedback type="invalid">
-                            Please provide a model.
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group as={Col}>
-                        <Form.Label>Year</Form.Label>
-                        <Form.Control
-                            required
-                            min="1900"
-                            max={currentYear}
-                            isInvalid={validated && (formData.year < 1900 || formData.year > currentYear)}
-                            type="number"
-                            name="year"
-                            value={formData.year}
-                            onChange={handleChange} />
-                        <Form.Control.Feedback type="invalid">
-                            Please provide a year between 1900 and {currentYear}.
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                </Row>
-                <Row className='mb-3'>
-                    <Form.Group as={Col}>
-                        <Form.Label>Material</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="material"
-                            value={formData.material}
-                            placeholder='Carbon...'
-                            onChange={handleChange} />
-                    </Form.Group>
-                    <Form.Group as={Col}>
-                        <Form.Label>Color</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="color"
-                            value={formData.color}
-                            placeholder='Blue...'
-                            onChange={handleChange} />
-                    </Form.Group>
-                    <Form.Group as={Col}>
-                        <Form.Label>Size</Form.Label>
-                        <Form.Select name='size' value={formData.size} onChange={handleChange} >
-                            {['XS', 'S', 'M', 'L', 'XL'].map((size, index) => (
-                                <option key={index}>{size}</option>
-                            ))}
-                        </Form.Select>
-                    </Form.Group>
-                </Row>
-                <Form.Group className="mb-3">
-                    <Form.Label>Serial number</Form.Label>
+        <Form noValidate validated={validated} ref={formRef} onSubmit={handleSubmit}>
+            <Row className='mb-3'>
+                <Form.Group as={Col}>
+                    <Form.Label>Brand</Form.Label>
+                    <Form.Control
+                        autoFocus
+                        required
+                        type="text"
+                        name="brand"
+                        value={formData.brand}
+                        placeholder='Transition...'
+                        onChange={handleChange} />
+                    <Form.Control.Feedback type="invalid">
+                        Please provide a brand.
+                    </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group as={Col}>
+                    <Form.Label>Model</Form.Label>
+                    <Form.Control
+                        required
+                        type="text"
+                        name="model"
+                        value={formData.model}
+                        placeholder='Patrol...'
+                        onChange={handleChange} />
+                    <Form.Control.Feedback type="invalid">
+                        Please provide a model.
+                    </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group as={Col}>
+                    <Form.Label>Year</Form.Label>
+                    <Form.Control
+                        required
+                        min="1900"
+                        max={currentYear}
+                        isInvalid={validated && (formData.year < 1900 || formData.year > currentYear)}
+                        type="number"
+                        name="year"
+                        value={formData.year}
+                        onChange={handleChange} />
+                    <Form.Control.Feedback type="invalid">
+                        Please provide a year between 1900 and {currentYear}.
+                    </Form.Control.Feedback>
+                </Form.Group>
+            </Row>
+            <Row className='mb-3'>
+                <Form.Group as={Col}>
+                    <Form.Label>Material</Form.Label>
                     <Form.Control
                         type="text"
-                        name="serialNumber"
-                        value={formData.serialNumber}
-                        placeholder='1251-AD-664...'
+                        name="material"
+                        value={formData.material}
+                        placeholder='Carbon...'
                         onChange={handleChange} />
                 </Form.Group>
-                <Button type="submit">Submit</Button>
-            </Form >
-        </>
+                <Form.Group as={Col}>
+                    <Form.Label>Color</Form.Label>
+                    <Form.Control
+                        type="text"
+                        name="color"
+                        value={formData.color}
+                        placeholder='Blue...'
+                        onChange={handleChange} />
+                </Form.Group>
+                <Form.Group as={Col}>
+                    <Form.Label>Size</Form.Label>
+                    <Form.Select name='size' value={formData.size} onChange={handleChange} >
+                        {['XS', 'S', 'M', 'L', 'XL'].map((size, index) => (
+                            <option key={index}>{size}</option>
+                        ))}
+                    </Form.Select>
+                </Form.Group>
+            </Row>
+            <Form.Group className="mb-3">
+                <Form.Label>Serial number</Form.Label>
+                <Form.Control
+                    type="text"
+                    name="serialNumber"
+                    value={formData.serialNumber}
+                    placeholder='1251-AD-664...'
+                    onChange={handleChange} />
+            </Form.Group>
+            <SubmitButton display={displaySubmitButton} />
+        </Form >
     );
+});
+
+const SubmitButton = ({ display }) => {
+    return (display ? <Button type="submit">Submit</Button> : null);
 };
+
+export default BikeForm;
