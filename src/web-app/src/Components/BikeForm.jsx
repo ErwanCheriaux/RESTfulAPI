@@ -5,43 +5,58 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 export default function BikeForm({ onSubmit }) {
+    const currentYear = new Date().getFullYear();
+    const [validated, setValidated] = useState(false);
     const [formData, setFormData] = useState({
         brand: '',
         model: '',
-        year: 2010,
+        year: currentYear,
         material: '',
         color: '',
         size: 'M',
         serialNumber: ''
     });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    const handleChange = (event) => {
+        const { name, value } = event.target;
         setFormData({
             ...formData,
             [name]: value
         });
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        // Show validation
+        setValidated(true);
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            return;
+        }
+
+        // Process formData
         onSubmit(formData);
+
         // Reset the form after submission
         setFormData({
             brand: '',
             model: '',
-            year: 2010,
+            year: currentYear,
             material: '',
             color: '',
             size: 'M',
             serialNumber: ''
         });
+
+        // Hide validation
+        setValidated(false);
     };
 
     return (
         <>
             <h1>Add new bike</h1>
-            <Form onSubmit={handleSubmit}>
+            <Form noValidate validated={validated} onSubmit={handleSubmit}>
                 <Row className='mb-3'>
                     <Form.Group as={Col}>
                         <Form.Label>Brand</Form.Label>
@@ -53,6 +68,9 @@ export default function BikeForm({ onSubmit }) {
                             value={formData.brand}
                             placeholder='Transition...'
                             onChange={handleChange} />
+                        <Form.Control.Feedback type="invalid">
+                            Please provide a brand.
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group as={Col}>
                         <Form.Label>Model</Form.Label>
@@ -63,14 +81,24 @@ export default function BikeForm({ onSubmit }) {
                             value={formData.model}
                             placeholder='Patrol...'
                             onChange={handleChange} />
+                        <Form.Control.Feedback type="invalid">
+                            Please provide a model.
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group as={Col}>
                         <Form.Label>Year</Form.Label>
                         <Form.Control
+                            required
+                            min="1900"
+                            max={currentYear}
+                            isInvalid={validated && (formData.year < 1900 || formData.year > currentYear)}
                             type="number"
                             name="year"
                             value={formData.year}
                             onChange={handleChange} />
+                        <Form.Control.Feedback type="invalid">
+                            Please provide a year between 1900 and {currentYear}.
+                        </Form.Control.Feedback>
                     </Form.Group>
                 </Row>
                 <Row className='mb-3'>
