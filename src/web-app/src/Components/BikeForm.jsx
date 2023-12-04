@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { Button, Form, Row, Col } from 'react-bootstrap';
+import React, { useState } from 'react'
+import { Button, Form, Row, Col } from 'react-bootstrap'
 
-// export default function BikeForm({ onSubmit, ref, defaultValue = null, displaySubmitButton = true }) {
-export default function BikeForm({ formRef, onSubmit, defaultValue = null, displaySubmitButton = true }) {
-    const currentYear = new Date().getFullYear();
+export default function BikeForm({ formRef, onSubmit, defaultValue, hideSubmitButton }) {
+    const currentYear = new Date().getFullYear()
     const getDefaultFormData = () => {
         return {
             brand: '',
@@ -12,40 +11,40 @@ export default function BikeForm({ formRef, onSubmit, defaultValue = null, displ
             material: '',
             color: '',
             size: 'M',
-            serialNumber: '',
-        };
-    };
+            serialNumber: ''
+        }
+    }
 
-    const [validated, setValidated] = useState(false);
-    const [formData, setFormData] = useState(defaultValue || getDefaultFormData());
+    const [validated, setValidated] = useState(false)
+    const [formData, setFormData] = useState(defaultValue || getDefaultFormData())
 
     const handleChange = (event) => {
-        const { name, value } = event.target;
+        const { name, value } = event.target
         setFormData({
             ...formData,
             [name]: value
-        });
-    };
+        })
+    }
 
     const handleSubmit = (event) => {
-        event.preventDefault();
+        event.preventDefault()
 
         // Show validation
-        setValidated(true);
-        const form = event.currentTarget;
+        setValidated(true)
+        const form = event.currentTarget
         if (form.checkValidity() === false) {
-            return;
+            return
         }
 
         // Process formData
-        onSubmit(formData);
+        onSubmit(formData)
 
         // Reset the form after submission
-        setFormData(getDefaultFormData());
+        setFormData(getDefaultFormData())
 
         // Hide validation
-        setValidated(false);
-    };
+        setValidated(false)
+    }
 
     return (
         <Form noValidate validated={validated} ref={formRef} onSubmit={handleSubmit}>
@@ -130,11 +129,11 @@ export default function BikeForm({ formRef, onSubmit, defaultValue = null, displ
                     placeholder='1251-AD-664...'
                     onChange={handleChange} />
             </Form.Group>
-            <SubmitButton display={displaySubmitButton} />
+            <SubmitButton display={!hideSubmitButton} />
         </Form >
-    );
-};
+    )
+}
 
 const SubmitButton = ({ display }) => {
-    return (display ? <Button type="submit">Submit</Button> : null);
-};
+    return (display ? <Button type="submit">Submit</Button> : null)
+}

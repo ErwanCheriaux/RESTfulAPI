@@ -1,9 +1,9 @@
-import React, { useRef } from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import BikeForm from './BikeForm';
+import React, { useRef } from 'react'
+import { Modal, Button } from 'react-bootstrap'
+import BikeForm from './BikeForm'
 
 export default function BikeEditModal({ bike, show, onClickClose, onClickSave }) {
-    const formRef = useRef();
+    const formRef = useRef()
 
     return (
         <Modal show={show} onHide={onClickClose}>
@@ -15,12 +15,12 @@ export default function BikeEditModal({ bike, show, onClickClose, onClickSave })
                     formRef={formRef}
                     onSubmit={onClickSave}
                     defaultValue={bike}
-                    displaySubmitButton={false} />
+                    hideSubmitButton={true} />
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onClickClose}>Close</Button>
                 <Button variant="primary" onClick={() => formRef.current.requestSubmit()}>Save</Button>
             </Modal.Footer>
         </Modal>
-    );
-};
+    )
+}
