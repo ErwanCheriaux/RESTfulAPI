@@ -1,5 +1,6 @@
 import { Tab, Tabs } from 'react-bootstrap';
 import BikeTable from './Components/BikeTable';
+import RiderTable from './Components/RiderTable';
 
 export default function App() {
   return (
@@ -16,7 +17,7 @@ export default function App() {
           <BikeTable />
         </Tab>
         <Tab eventKey="rider" title="Rider">
-          Tab content for Rider
+          <RiderTable />
         </Tab>
       </Tabs>
     </div>
