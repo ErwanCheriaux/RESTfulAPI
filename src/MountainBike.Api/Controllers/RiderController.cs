@@ -37,7 +37,7 @@ public class RiderController : ControllerBase
 
     // GET /riders/{id}
     [HttpGet("{id}")]
-    public async Task<ActionResult<RiderDetailsDto>> GetRiderAsync(Guid id)
+    public async Task<ActionResult<RiderDto>> GetRiderAsync(Guid id)
     {
         var rider = await _riderService.GetRiderAsync(id);
 
@@ -46,14 +46,12 @@ public class RiderController : ControllerBase
             return NotFound();
         }
 
-        var riderbikes = await _bikeService.GetBikesByRiderIdAsync(id);
-
-        return rider.AsDetailsDto(riderbikes.Count());
+        return rider.AsDto();
     }
 
     // POST /riders
     [HttpPost]
-    public async Task<ActionResult<RiderDetailsDto>> CreateRiderAsync(CreateRiderDto riderDto)
+    public async Task<ActionResult<RiderDto>> CreateRiderAsync(CreateRiderDto riderDto)
     {
         RiderEntity rider = new()
         {
@@ -66,7 +64,7 @@ public class RiderController : ControllerBase
 
         await _riderService.CreateRiderAsync(rider);
 
-        return CreatedAtAction(nameof(GetRiderAsync), new { Id = rider.Id }, rider.AsDetailsDto(bikeCount: 0));
+        return CreatedAtAction(nameof(GetRiderAsync), new { Id = rider.Id }, rider.AsDto());
     }
 
     // PUT /riders/{id}

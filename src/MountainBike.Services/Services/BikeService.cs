@@ -3,9 +3,14 @@ using MountainBike.Services.Repositories;
 
 namespace MountainBike.Services.Services;
 
-public class BikeService(IBikeRepository bikeRepository) : IBikeService
+public class BikeService : IBikeService
 {
-    private readonly IBikeRepository _bikeRepository = bikeRepository;
+    private readonly IBikeRepository _bikeRepository;
+
+    public BikeService(IBikeRepository bikeRepository)
+    {
+        _bikeRepository = bikeRepository;
+    }
 
     public async Task CreateBikeAsync(BikeEntity bike)
     {

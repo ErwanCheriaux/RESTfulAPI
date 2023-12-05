@@ -99,6 +99,17 @@ export default function RiderTable() {
         }
     }
 
+    // d: yyyy-mm-dd
+    function dateToAge(d) {
+        let date = new Date(d + 'T00:00:00')
+        let today = new Date()
+        let age = today.getFullYear() - date.getFullYear()
+        if (date.setFullYear(date.getFullYear() + age) > today) {
+            age--
+        }
+        return age
+    }
+
     return (
         <>
             <h1>My rider list</h1>
@@ -116,7 +127,7 @@ export default function RiderTable() {
                     {riders.map((rider, index) => (
                         <tr key={index}>
                             <td>{rider.name}</td>
-                            <td>{rider.age}</td>
+                            <td>{dateToAge(rider.birthdate)}</td>
                             <td>{rider.country}</td>
                             <td><Button variant="warning" onClick={() => handelRiderEdit(rider)}>Edit</Button></td>
                             <td><Button variant="danger" onClick={() => handelRiderDelete(rider.id)}>Delete</Button></td>

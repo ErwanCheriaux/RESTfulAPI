@@ -23,17 +23,8 @@ public static class Extensions
         return new(
             rider.Id,
             rider.Name,
-            rider.CreationDate);
-    }
-
-    public static RiderDetailsDto AsDetailsDto(this RiderEntity rider, int bikeCount)
-    {
-        return new(
-            rider.Id,
-            rider.Name,
-            rider.Birthdate.AsAge(),
+            rider.Birthdate,
             rider.Country,
-            bikeCount,
             rider.CreationDate);
     }
 
