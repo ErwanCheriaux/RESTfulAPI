@@ -62,10 +62,9 @@ export default function RiderForm({ formRef, onSubmit, defaultValue, hideSubmitB
                     <Form.Label>Birth date</Form.Label>
                     <Form.Control
                         required
-                        type="text"
+                        type="date"
                         name="birthdate"
                         value={formData.birthdate}
-                        placeholder='yyyy-mm-dd'
                         onChange={handleChange} />
                     <Form.Control.Feedback type="invalid">
                         Please provide a date of birth.
