@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Table, Button } from 'react-bootstrap'
 import RiderForm from './RiderForm'
 import RiderEditModal from './RiderEditModal'
+import BikeSelect from './BikeSelect'
 
-export default function RiderTable() {
+export default function RiderTable({ bikes }) {
     const [riders, setRiders] = useState([])
     const [riderEdit, setRiderEdit] = useState({})
     const [showModal, setShowModal] = useState(false)
@@ -119,6 +120,7 @@ export default function RiderTable() {
                         <th>Name</th>
                         <th>Age</th>
                         <th>Country</th>
+                        <th>Bike</th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -129,6 +131,7 @@ export default function RiderTable() {
                             <td>{rider.name}</td>
                             <td>{dateToAge(rider.birthdate)}</td>
                             <td>{rider.country}</td>
+                            <td><BikeSelect bikes={bikes} /></td>
                             <td><Button variant="warning" onClick={() => handelRiderEdit(rider)}>Edit</Button></td>
                             <td><Button variant="danger" onClick={() => handelRiderDelete(rider.id)}>Delete</Button></td>
                         </tr>

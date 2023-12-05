@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Button, Form, Row, Col } from 'react-bootstrap'
 
 export default function BikeForm({ formRef, onSubmit, defaultValue, hideSubmitButton }) {

@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Table, Button } from 'react-bootstrap'
 import BikeForm from './BikeForm'
 import BikeEditModal from './BikeEditModal'
 
-export default function BikeTable() {
-    const [bikes, setBikes] = useState([])
+export default function BikeTable({ bikes, setBikes }) {
     const [bikeEdit, setBikeEdit] = useState({})
     const [showModal, setShowModal] = useState(false)
 
@@ -25,7 +24,7 @@ export default function BikeTable() {
         }
 
         fetchData()
-    }, []) // The empty dependency array ensures this effect runs only once when the component mounts
+    }, [setBikes])
 
     const handleFormSubmit = async (newBike) => {
         try {
