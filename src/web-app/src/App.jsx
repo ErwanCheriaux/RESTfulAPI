@@ -1,10 +1,25 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Tab, Tabs } from 'react-bootstrap';
 import BikeTable from './Components/BikeTable';
 import RiderTable from './Components/RiderTable';
 
 export default function App() {
   const [bikes, setBikes] = useState([])
+
+  const getBikes = useCallback(async () => {
+    // Fetch data from your .NET API
+    try {
+      const response = await fetch('http://localhost:5075/bikes')
+      if (response.ok) {
+        const data = await response.json()
+        setBikes(data)
+      } else {
+        console.error('Failed to fetch data from API')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }, []);
 
   return (
     <div className="App">
@@ -13,10 +28,10 @@ export default function App() {
           Tab content for Home
         </Tab>
         <Tab eventKey="bike" title="Bike">
-          <BikeTable bikes={bikes} setBikes={setBikes} />
+          <BikeTable bikes={bikes} setBikes={setBikes} getBikes={getBikes} />
         </Tab>
         <Tab eventKey="rider" title="Rider">
-          <RiderTable bikes={bikes} />
+          <RiderTable bikes={bikes} getBikes={getBikes} />
         </Tab>
       </Tabs>
     </div>

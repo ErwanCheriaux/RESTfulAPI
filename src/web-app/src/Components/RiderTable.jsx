@@ -4,7 +4,7 @@ import RiderForm from './RiderForm'
 import RiderEditModal from './RiderEditModal'
 import BikeSelect from './BikeSelect'
 
-export default function RiderTable({ bikes }) {
+export default function RiderTable({ bikes, getBikes }) {
     const [riders, setRiders] = useState([])
     const [riderEdit, setRiderEdit] = useState({})
     const [showModal, setShowModal] = useState(false)
@@ -131,7 +131,7 @@ export default function RiderTable({ bikes }) {
                             <td>{rider.name}</td>
                             <td>{dateToAge(rider.birthdate)}</td>
                             <td>{rider.country}</td>
-                            <td><BikeSelect bikes={bikes} /></td>
+                            <td><BikeSelect riderId={rider.id} bikes={bikes} getBikes={getBikes} /></td>
                             <td><Button variant="warning" onClick={() => handelRiderEdit(rider)}>Edit</Button></td>
                             <td><Button variant="danger" onClick={() => handelRiderDelete(rider.id)}>Delete</Button></td>
                         </tr>

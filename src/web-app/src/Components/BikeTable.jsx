@@ -3,28 +3,14 @@ import { Table, Button } from 'react-bootstrap'
 import BikeForm from './BikeForm'
 import BikeEditModal from './BikeEditModal'
 
-export default function BikeTable({ bikes, setBikes }) {
+export default function BikeTable({ bikes, setBikes, getBikes }) {
     const [bikeEdit, setBikeEdit] = useState({})
     const [showModal, setShowModal] = useState(false)
 
     useEffect(() => {
         // Fetch data from your .NET API when the component mounts
-        const fetchData = async () => {
-            try {
-                const response = await fetch('http://localhost:5075/bikes')
-                if (response.ok) {
-                    const data = await response.json()
-                    setBikes(data)
-                } else {
-                    console.error('Failed to fetch data from API')
-                }
-            } catch (error) {
-                console.error('Error:', error)
-            }
-        }
-
-        fetchData()
-    }, [setBikes])
+        getBikes()
+    }, [getBikes])
 
     const handleFormSubmit = async (newBike) => {
         try {
