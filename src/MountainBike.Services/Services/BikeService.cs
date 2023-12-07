@@ -34,7 +34,8 @@ public class BikeService : IBikeService
 
     public async Task<IEnumerable<BikeEntity>> GetBikesByRiderIdAsync(Guid riderId)
     {
-        return (await _bikeRepository.GetBikesAsync()).Where(bike => bike.RiderId == riderId);
+        return (await _bikeRepository.GetBikesAsync())
+            .Where(bike => bike.RiderId == riderId);
     }
 
     public async Task UpdateBikeAsync(BikeEntity bike)

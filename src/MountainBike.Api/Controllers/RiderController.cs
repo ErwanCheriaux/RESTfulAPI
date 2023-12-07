@@ -111,6 +111,40 @@ public class RiderController : ControllerBase
         return riderbikes.Select(bike => bike.AsDto());
     }
 
+
+    // PATCh /riders/{rider_id}/bikes
+    // Set, change or remove rider's bike
+    [HttpPatch("{rider_id}/bikes")]
+    public async Task<ActionResult> PatchRiderBikeAsync(Guid rider_id, Guid? bike_id)
+    {
+        var rider = await _riderService.GetRiderAsync(rider_id);
+        var newBike = bike_id.HasValue ? await _bikeService.GetBikeAsync(bike_id.Value) : null;
+
+        // rider must exist
+        // bike must exit if bike_id is not null
+        if (rider is null || bike_id.HasValue && newBike is null)
+        {
+            return NotFound();
+        }
+
+        // remove existing bikes assigned to rider
+        var existingBikes = await _bikeService.GetBikesByRiderIdAsync(rider.Id);
+        foreach (var bike in existingBikes)
+        {
+            bike.RiderId = null;
+            await _bikeService.UpdateBikeAsync(bike);
+        }
+
+        // add new bike to rider
+        if (newBike is not null)
+        {
+            newBike.RiderId = rider.Id;
+            await _bikeService.UpdateBikeAsync(newBike);
+        }
+
+        return NoContent();
+    }
+
     //
     // Summary:
     //     Map a rider and a bike in the repository.
