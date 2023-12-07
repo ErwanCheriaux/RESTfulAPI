@@ -220,7 +220,7 @@ public class RiderControllerTests
     }
 
     [Fact]
-    public async Task AddRiderBikeAsync_WithUnexistingRider_ReturnsNotFound()
+    public async Task PatchRiderBikeAsync_WithUnexistingRider_ReturnsNotFound()
     {
         // Arrange
         _mockRiderService
@@ -230,14 +230,14 @@ public class RiderControllerTests
         var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
-        var result = await controller.AddRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
+        var result = await controller.PatchRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
     }
 
     [Fact]
-    public async Task AddRiderBikeAsync_WithUnexistingBike_ReturnsNotFound()
+    public async Task PatchRiderBikeAsync_WithUnexistingBike_ReturnsNotFound()
     {
         // Arrange
         _mockBikeService
@@ -247,7 +247,7 @@ public class RiderControllerTests
         var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
-        var result = await controller.AddRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
+        var result = await controller.PatchRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
@@ -271,7 +271,7 @@ public class RiderControllerTests
         var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
-        var result = await controller.AddRiderBikeAsync(existingRider.Id, existingBike.Id);
+        var result = await controller.PatchRiderBikeAsync(existingRider.Id, existingBike.Id);
 
         // Assert
         result.Should().BeOfType<NoContentResult>();
@@ -279,61 +279,21 @@ public class RiderControllerTests
     }
 
     [Fact]
-    public async Task RemoveRiderBikeAsync_WithUnexistingRider_ReturnsNotFound()
-    {
-        // Arrange
-        _mockRiderService
-            .Setup(service => service.GetRiderAsync(It.IsAny<Guid>()))
-            .ReturnsAsync((RiderEntity?)null!);
-
-        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
-
-        // Act
-        var result = await controller.RemoveRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
-
-        // Assert
-        result.Should().BeOfType<NotFoundResult>();
-    }
-
-    [Fact]
-    public async Task RemoveRiderBikeAsync_WithUnexistingBike_ReturnsNotFound()
-    {
-        // Arrange
-        _mockBikeService
-            .Setup(service => service.GetBikeAsync(It.IsAny<Guid>()))
-            .ReturnsAsync((BikeEntity?)null!);
-
-        var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
-
-        // Act
-        var result = await controller.RemoveRiderBikeAsync(Guid.NewGuid(), Guid.NewGuid());
-
-        // Assert
-        result.Should().BeOfType<NotFoundResult>();
-    }
-
-    [Fact]
-    public async Task RemoveRiderBikeAsync_WithExistingRiderAndBike_ReturnsNoContent()
+    public async Task AddRiderBikeAsync_WithExistingRiderAndNullBike_ReturnsNoContent()
     {
         // Arrange
         var existingRider = CreateRandom.Rider();
-        var existingBike = CreateRandom.Bike();
 
         _mockRiderService
             .Setup(service => service.GetRiderAsync(existingRider.Id))
             .ReturnsAsync(existingRider);
 
-        _mockBikeService
-            .Setup(service => service.GetBikeAsync(existingBike.Id))
-            .ReturnsAsync(existingBike);
-
         var controller = new RiderController(_mockRiderService.Object, _mockBikeService.Object, _mockLogger.Object);
 
         // Act
-        var result = await controller.RemoveRiderBikeAsync(existingRider.Id, existingBike.Id);
+        var result = await controller.PatchRiderBikeAsync(existingRider.Id, null);
 
         // Assert
         result.Should().BeOfType<NoContentResult>();
-        existingBike.RiderId.Should().BeNull();
     }
 }
