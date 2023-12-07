@@ -5,6 +5,7 @@ namespace MountainBike.Api;
 
 public record BikeDto(
     Guid Id,
+    Guid? RiderId,
     string? Brand,
     string? Model,
     int Year,

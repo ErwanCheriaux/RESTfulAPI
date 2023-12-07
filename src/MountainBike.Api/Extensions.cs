@@ -8,6 +8,7 @@ public static class Extensions
     {
         return new(
             bike.Id,
+            bike.RiderId,
             bike.Brand,
             bike.Model,
             bike.Year,
