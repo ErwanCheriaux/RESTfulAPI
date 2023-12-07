@@ -92,6 +92,7 @@ export default function RiderTable({ bikes, getBikes }) {
                 let ridersCopy = [...riders]
                 let ridersRemoved = ridersCopy.filter(rider => rider.id !== id)
                 setRiders(ridersRemoved)
+                getBikes()
             } else {
                 console.error('Failed to delete rider')
             }
