@@ -3,9 +3,14 @@ using MountainBike.Services.Repositories;
 
 namespace MountainBike.Services.Services;
 
-public class BikeService(IBikeRepository bikeRepository) : IBikeService
+public class BikeService : IBikeService
 {
-    private readonly IBikeRepository _bikeRepository = bikeRepository;
+    private readonly IBikeRepository _bikeRepository;
+
+    public BikeService(IBikeRepository bikeRepository)
+    {
+        _bikeRepository = bikeRepository;
+    }
 
     public async Task CreateBikeAsync(BikeEntity bike)
     {
@@ -29,7 +34,8 @@ public class BikeService(IBikeRepository bikeRepository) : IBikeService
 
     public async Task<IEnumerable<BikeEntity>> GetBikesByRiderIdAsync(Guid riderId)
     {
-        return (await _bikeRepository.GetBikesAsync()).Where(bike => bike.RiderId == riderId);
+        return (await _bikeRepository.GetBikesAsync())
+            .Where(bike => bike.RiderId == riderId);
     }
 
     public async Task UpdateBikeAsync(BikeEntity bike)

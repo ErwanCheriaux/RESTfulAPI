@@ -37,7 +37,7 @@ public class RiderController : ControllerBase
 
     // GET /riders/{id}
     [HttpGet("{id}")]
-    public async Task<ActionResult<RiderDetailsDto>> GetRiderAsync(Guid id)
+    public async Task<ActionResult<RiderDto>> GetRiderAsync(Guid id)
     {
         var rider = await _riderService.GetRiderAsync(id);
 
@@ -46,14 +46,12 @@ public class RiderController : ControllerBase
             return NotFound();
         }
 
-        var riderbikes = await _bikeService.GetBikesByRiderIdAsync(id);
-
-        return rider.AsDetailsDto(riderbikes.Count());
+        return rider.AsDto();
     }
 
     // POST /riders
     [HttpPost]
-    public async Task<ActionResult<RiderDetailsDto>> CreateRiderAsync(CreateRiderDto riderDto)
+    public async Task<ActionResult<RiderDto>> CreateRiderAsync(CreateRiderDto riderDto)
     {
         RiderEntity rider = new()
         {
@@ -66,7 +64,7 @@ public class RiderController : ControllerBase
 
         await _riderService.CreateRiderAsync(rider);
 
-        return CreatedAtAction(nameof(GetRiderAsync), new { Id = rider.Id }, rider.AsDetailsDto(bikeCount: 0));
+        return CreatedAtAction(nameof(GetRiderAsync), new { Id = rider.Id }, rider.AsDto());
     }
 
     // PUT /riders/{id}
@@ -113,66 +111,36 @@ public class RiderController : ControllerBase
         return riderbikes.Select(bike => bike.AsDto());
     }
 
-    //
-    // Summary:
-    //     Map a rider and a bike in the repository.
-    //
-    // Parameters:
-    //     rider_id: 
-    //         Rider collecting the bike_id
-    //
-    //     bike_id:
-    //         Bike received by rider_id
-    //
-    // Endpoint:
-    //     PUT /riders/{rider_id}/bikes/{bike_id}
-    //
-    [HttpPut("{rider_id}/bikes/{bike_id}")]
-    public async Task<ActionResult> AddRiderBikeAsync(Guid rider_id, Guid bike_id)
+
+    // PATCh /riders/{rider_id}/bikes
+    // Set, change or remove rider's bike
+    [HttpPatch("{rider_id}/bikes")]
+    public async Task<ActionResult> PatchRiderBikeAsync(Guid rider_id, Guid? bike_id)
     {
         var rider = await _riderService.GetRiderAsync(rider_id);
-        var bike = await _bikeService.GetBikeAsync(bike_id);
+        var newBike = bike_id.HasValue ? await _bikeService.GetBikeAsync(bike_id.Value) : null;
 
-        if (rider is null || bike is null)
+        // rider must exist
+        // bike must exit if bike_id is not null
+        if (rider is null || bike_id.HasValue && newBike is null)
         {
             return NotFound();
         }
 
-        bike.RiderId = rider_id;
-
-        await _bikeService.UpdateBikeAsync(bike);
-
-        return NoContent();
-    }
-
-    //
-    // Summary:
-    //     Unmap a rider and a bike in the repository.
-    //
-    // Parameters:
-    //     rider_id: 
-    //         Rider loosing the bike_id
-    //
-    //     bike_id:
-    //         Bike removed from rider_id
-    //
-    // Endpoint:
-    //     DELETE /riders/{rider_id}/bikes/{bike_id}
-    //
-    [HttpDelete("{rider_id}/bikes/{bike_id}")]
-    public async Task<ActionResult> RemoveRiderBikeAsync(Guid rider_id, Guid bike_id)
-    {
-        var rider = await _riderService.GetRiderAsync(rider_id);
-        var bike = await _bikeService.GetBikeAsync(bike_id);
-
-        if (rider is null || bike is null)
+        // remove existing bikes assigned to rider
+        var existingBikes = await _bikeService.GetBikesByRiderIdAsync(rider.Id);
+        foreach (var bike in existingBikes)
         {
-            return NotFound();
+            bike.RiderId = null;
+            await _bikeService.UpdateBikeAsync(bike);
         }
 
-        bike.RiderId = null;
-
-        await _bikeService.UpdateBikeAsync(bike);
+        // add new bike to rider
+        if (newBike is not null)
+        {
+            newBike.RiderId = rider.Id;
+            await _bikeService.UpdateBikeAsync(newBike);
+        }
 
         return NoContent();
     }

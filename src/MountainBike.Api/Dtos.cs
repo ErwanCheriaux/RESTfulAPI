@@ -5,6 +5,7 @@ namespace MountainBike.Api;
 
 public record BikeDto(
     Guid Id,
+    Guid? RiderId,
     string? Brand,
     string? Model,
     int Year,
@@ -38,15 +39,8 @@ public record UpdateBikeDto(
 public record RiderDto(
     Guid Id,
     string? Name,
-    DateTimeOffset CreationDate
-);
-
-public record RiderDetailsDto(
-    Guid Id,
-    string? Name,
-    int Age,
+    DateOnly Birthdate,
     string? Country,
-    int BikeCount,
     DateTimeOffset CreationDate
 );
 

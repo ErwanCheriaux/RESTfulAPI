@@ -54,6 +54,7 @@ public class BikeController : ControllerBase
         BikeEntity bike = new()
         {
             Id = Guid.NewGuid(),
+            RiderId = null,
             Brand = bikeDto.Brand,
             Model = bikeDto.Model,
             Year = bikeDto.Year,
