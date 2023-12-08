@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { Tab, Tabs } from 'react-bootstrap';
-import BikeTable from './Components/BikeTable';
-import RiderTable from './Components/RiderTable';
+import BikeTable from './components/BikeTable';
+import RiderTable from './components/RiderTable';
 
 export default function App() {
   const [bikes, setBikes] = useState([])
