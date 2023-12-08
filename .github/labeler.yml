@@ -9,16 +9,19 @@ settings:
   - ".vscode/**"
 
 api:
-  - "MountainBike.Api/**/*.cs"
+  - "**/MountainBike.Api/**/*.cs"
+
+services:
+  - "**/MountainBike.Services/**/*.cs"
 
 web:
-  - "MountainBike.Web/**"
+  - "frontend/**"
 
 test:
-  - "tests/**/*.cs"
+  - "**/tests/**"
 
 readme:
-  - "README.md"
+  - "README.*.md"
 
 docker:
   - "**/Dokerfile"

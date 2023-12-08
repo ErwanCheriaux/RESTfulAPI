@@ -11,7 +11,7 @@ on:
 
 defaults:
   run:
-    working-directory: ./src/web-app/
+    working-directory: ./frontend/
 
 jobs:
   build:
@@ -21,9 +21,6 @@ jobs:
     strategy:
       matrix:
         node-version: [21.x]
-
-    env:
-      PROJECT_PATH: 'src/web-app'
 
     steps:
     - name: Checkout Repository
