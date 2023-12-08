@@ -57,10 +57,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseHttpsRedirection();
-    app.UseCors("AllowOrigin");
 }
 
+app.UseCors("AllowOrigin");
+app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();

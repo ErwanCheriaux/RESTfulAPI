@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react'
-import { Tab, Tabs } from 'react-bootstrap';
-import BikeTable from './components/BikeTable';
-import RiderTable from './components/RiderTable';
+import { Tab, Tabs } from 'react-bootstrap'
+import BikeTable from './components/BikeTable'
+import RiderTable from './components/RiderTable'
+import configData from "./config.json"
 
 export default function App() {
   const [bikes, setBikes] = useState([])
@@ -9,7 +10,7 @@ export default function App() {
   const getBikes = useCallback(async () => {
     // Fetch data from your .NET API
     try {
-      const response = await fetch('http://localhost:5075/bikes')
+      const response = await fetch(configData.SERVER_URL + '/bikes')
       if (response.ok) {
         const data = await response.json()
         setBikes(data)
