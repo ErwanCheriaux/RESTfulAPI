@@ -26,7 +26,9 @@ RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
 
 # If you need to enable globalization and time zones:
 # https://github.com/dotnet/dotnet-docker/blob/main/samples/enable-globalization.md
+
 ################################################################################
+
 # Create a new stage for running the application that contains the minimal
 # runtime dependencies for the application. This often uses a different base
 # image from the build stage where the necessary files are copied from the build
