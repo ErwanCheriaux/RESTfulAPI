@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import BikeTable from '../Components/BikeTable'
+import BikeTable from '../components/BikeTable'
 
 describe('BikeTable', () => {
     test('renders BikeTable component', async () => {

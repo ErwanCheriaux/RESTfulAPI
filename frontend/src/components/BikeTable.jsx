@@ -14,7 +14,7 @@ export default function BikeTable({ bikes, setBikes, getBikes }) {
 
     const handleFormSubmit = async (newBike) => {
         try {
-            const response = await fetch('http://localhost:5075/bikes', {
+            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/bikes', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ export default function BikeTable({ bikes, setBikes, getBikes }) {
         setShowModal(false)
 
         try {
-            const response = await fetch('http://localhost:5075/bikes/' + updatedBike.id, {
+            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/bikes/' + updatedBike.id, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ export default function BikeTable({ bikes, setBikes, getBikes }) {
 
     const handelBikeDelete = async (id) => {
         try {
-            const response = await fetch('http://localhost:5075/bikes/' + id, {
+            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/bikes/' + id, {
                 method: 'DELETE',
             })
 

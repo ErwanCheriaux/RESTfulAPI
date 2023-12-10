@@ -61,7 +61,7 @@ Run the MountainBike image into a docker container at http://localhost:8080/
 ```console
 docker network create mountainbikenetwork
 docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=mongoadmin --network=mountainbikenetwork mongo
-docker run -it --rm -p 8080:80 -e MongoDBSettings:Host=mongo -e MongoDBSettings:Password=mongoadmin --network=mountainbikenetwork erwancheriaux/mountainbike:v1
+docker run -it --rm -p 8080:8080 -e MongoDBSettings:Host=mongo -e MongoDBSettings:Password=mongoadmin --network=mountainbikenetwork erwancheriaux/mountainbike:v1
 ```
 
 Kubernetes secretes

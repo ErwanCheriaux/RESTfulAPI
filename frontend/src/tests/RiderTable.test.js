@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import RiderTable from '../Components/RiderTable'
+import RiderTable from '../components/RiderTable'
 
 describe('RiderTable', () => {
     test('renders RiderTable component', async () => {
