@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker Image Frontend
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 defaults:
   run:
-    working-directory: ./backend/
+    working-directory: ./frontend/
 
 jobs:
   build:
@@ -18,4 +18,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag mountainbike:$(date +%s)
+      run: docker build . --file Dockerfile --tag mountainbike-frontend:$(date +%s)
