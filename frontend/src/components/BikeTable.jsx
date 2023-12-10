@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Table, Button } from 'react-bootstrap'
 import BikeForm from './BikeForm'
 import BikeEditModal from './BikeEditModal'
-import configData from "../config.json"
 
 export default function BikeTable({ bikes, setBikes, getBikes }) {
     const [bikeEdit, setBikeEdit] = useState({})
@@ -15,7 +14,7 @@ export default function BikeTable({ bikes, setBikes, getBikes }) {
 
     const handleFormSubmit = async (newBike) => {
         try {
-            const response = await fetch(configData.SERVER_URL + '/bikes', {
+            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/bikes', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -47,7 +46,7 @@ export default function BikeTable({ bikes, setBikes, getBikes }) {
         setShowModal(false)
 
         try {
-            const response = await fetch(configData.SERVER_URL + '/bikes/' + updatedBike.id, {
+            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/bikes/' + updatedBike.id, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -69,7 +68,7 @@ export default function BikeTable({ bikes, setBikes, getBikes }) {
 
     const handelBikeDelete = async (id) => {
         try {
-            const response = await fetch(configData.SERVER_URL + '/bikes/' + id, {
+            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/bikes/' + id, {
                 method: 'DELETE',
             })
 

@@ -3,7 +3,6 @@ import { Table, Button } from 'react-bootstrap'
 import RiderForm from './RiderForm'
 import RiderEditModal from './RiderEditModal'
 import BikeSelect from './BikeSelect'
-import configData from "../config.json"
 
 export default function RiderTable({ bikes, getBikes }) {
     const [riders, setRiders] = useState([])
@@ -14,7 +13,7 @@ export default function RiderTable({ bikes, getBikes }) {
         // Fetch data from your .NET API when the component mounts
         const fetchData = async () => {
             try {
-                const response = await fetch(configData.SERVER_URL + '/riders')
+                const response = await fetch(process.env.REACT_APP_SERVER_URL + '/riders')
                 if (response.ok) {
                     const data = await response.json()
                     setRiders(data)
@@ -31,7 +30,7 @@ export default function RiderTable({ bikes, getBikes }) {
 
     const handleFormSubmit = async (newRider) => {
         try {
-            const response = await fetch(configData.SERVER_URL + '/riders', {
+            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/riders', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -63,7 +62,7 @@ export default function RiderTable({ bikes, getBikes }) {
         setShowModal(false)
 
         try {
-            const response = await fetch(configData.SERVER_URL + '/riders/' + updatedRider.id, {
+            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/riders/' + updatedRider.id, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -85,7 +84,7 @@ export default function RiderTable({ bikes, getBikes }) {
 
     const handelRiderDelete = async (id) => {
         try {
-            const response = await fetch(configData.SERVER_URL + '/riders/' + id, {
+            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/riders/' + id, {
                 method: 'DELETE',
             })
 

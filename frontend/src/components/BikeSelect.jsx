@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { Form } from 'react-bootstrap'
-import configData from "../config.json"
 
 export default function BikeSelect({ riderId, bikes, getBikes }) {
     const [riderBikes, setRiderBikes] = useState([])
@@ -14,7 +13,7 @@ export default function BikeSelect({ riderId, bikes, getBikes }) {
         const { value } = event.target
 
         try {
-            const response = await fetch(configData.SERVER_URL + '/riders/' + riderId + '/bikes?bike_id=' + value, {
+            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/riders/' + riderId + '/bikes?bike_id=' + value, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -37,7 +36,7 @@ export default function BikeSelect({ riderId, bikes, getBikes }) {
 
     async function getRiderBikes(id) {
         try {
-            const response = await fetch(configData.SERVER_URL + '/riders/' + id + '/bikes')
+            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/riders/' + id + '/bikes')
             if (response.ok) {
                 const data = await response.json()
                 setRiderBikes(data)
