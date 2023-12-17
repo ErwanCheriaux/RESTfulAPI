@@ -3,102 +3,45 @@ import { Table, Button } from 'react-bootstrap'
 import RiderForm from './RiderForm'
 import RiderEditModal from './RiderEditModal'
 import BikeSelect from './BikeSelect'
+import { deleteRiderAsync, getRidersAsync, postRiderAsync, putRiderAsync } from '../api'
 
-export default function RiderTable({ bikes, getBikes }) {
+export default function RiderTable({ bikes, loadBikes }) {
     const [riders, setRiders] = useState([])
     const [riderEdit, setRiderEdit] = useState({})
     const [showModal, setShowModal] = useState(false)
 
     useEffect(() => {
-        // Fetch data from your .NET API when the component mounts
-        const fetchData = async () => {
-            try {
-                const response = await fetch(process.env.REACT_APP_SERVER_URL + '/riders')
-                if (response.ok) {
-                    const data = await response.json()
-                    setRiders(data)
-                } else {
-                    console.error('Failed to fetch data from API')
-                }
-            } catch (error) {
-                console.error('Error:', error)
-            }
-        }
+        loadRiders()
+    }, [])
 
-        fetchData()
-    }, []) // The empty dependency array ensures this effect runs only once when the component mounts
-
-    const handleFormSubmit = async (newRider) => {
-        try {
-            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/riders', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newRider),
-            })
-
-            if (response.ok) {
-                const createdRider = await response.json()
-                setRiders([...riders, createdRider])
-            } else {
-                console.error('Failed to create rider')
-            }
-        } catch (error) {
-            console.error('Error:', error)
-        }
+    async function loadRiders() {
+        const data = await getRidersAsync()
+        setRiders(data)
     }
 
-    const handelRiderEdit = (existingRider) => {
+    async function handleFormSubmit(newRider) {
+        await postRiderAsync(newRider)
+        await loadRiders()
+    }
+
+    function handelRiderEdit(existingRider) {
         setRiderEdit(existingRider)
         setShowModal(true)
     }
 
-    const handleCloseModal = () => {
+    function handleCloseModal() {
         setShowModal(false)
     }
 
-    const handleSaveModal = async (updatedRider) => {
+    async function handleSaveModal(updatedRider) {
         setShowModal(false)
-
-        try {
-            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/riders/' + updatedRider.id, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(updatedRider),
-            })
-
-            if (response.ok) {
-                let ridersCopy = [...riders]
-                ridersCopy[ridersCopy.findIndex(rider => rider.id === updatedRider.id)] = updatedRider
-                setRiders(ridersCopy)
-            } else {
-                console.error('Failed to update rider')
-            }
-        } catch (error) {
-            console.error('Error:', error)
-        }
+        await putRiderAsync(updatedRider)
+        await loadRiders()
     }
 
-    const handelRiderDelete = async (id) => {
-        try {
-            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/riders/' + id, {
-                method: 'DELETE',
-            })
-
-            if (response.ok) {
-                let ridersCopy = [...riders]
-                let ridersRemoved = ridersCopy.filter(rider => rider.id !== id)
-                setRiders(ridersRemoved)
-                getBikes()
-            } else {
-                console.error('Failed to delete rider')
-            }
-        } catch (error) {
-            console.error('Error:', error)
-        }
+    async function handelRiderDelete(id) {
+        await deleteRiderAsync(id)
+        await loadRiders()
     }
 
     // d: yyyy-mm-dd
@@ -132,7 +75,7 @@ export default function RiderTable({ bikes, getBikes }) {
                             <td>{rider.name}</td>
                             <td>{dateToAge(rider.birthdate)}</td>
                             <td>{rider.country}</td>
-                            <td><BikeSelect riderId={rider.id} bikes={bikes} getBikes={getBikes} /></td>
+                            <td><BikeSelect riderId={rider.id} bikes={bikes} loadBikes={loadBikes} /></td>
                             <td><Button variant="warning" onClick={() => handelRiderEdit(rider)}>Edit</Button></td>
                             <td><Button variant="danger" onClick={() => handelRiderDelete(rider.id)}>Delete</Button></td>
                         </tr>

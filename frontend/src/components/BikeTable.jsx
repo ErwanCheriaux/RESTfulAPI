@@ -2,86 +2,39 @@ import { useState, useEffect } from 'react'
 import { Table, Button } from 'react-bootstrap'
 import BikeForm from './BikeForm'
 import BikeEditModal from './BikeEditModal'
+import { deleteBikeAsync, postBikeAsync, putBikeAsync } from '../api'
 
-export default function BikeTable({ bikes, setBikes, getBikes }) {
+export default function BikeTable({ bikes, setBikes, loadBikes }) {
     const [bikeEdit, setBikeEdit] = useState({})
     const [showModal, setShowModal] = useState(false)
 
     useEffect(() => {
-        // Fetch data from your .NET API when the component mounts
-        getBikes()
-    }, [getBikes])
+        loadBikes()
+    }, [loadBikes])
 
-    const handleFormSubmit = async (newBike) => {
-        try {
-            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/bikes', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newBike),
-            })
-
-            if (response.ok) {
-                const createdBike = await response.json()
-                setBikes([...bikes, createdBike])
-            } else {
-                console.error('Failed to create bike')
-            }
-        } catch (error) {
-            console.error('Error:', error)
-        }
+    async function handleFormSubmit(newBike) {
+        const createdBike = await postBikeAsync(newBike)
+        setBikes([...bikes, createdBike])
     }
 
-    const handelBikeEdit = (existingBike) => {
+    function handelBikeEdit(existingBike) {
         setBikeEdit(existingBike)
         setShowModal(true)
     }
 
-    const handleCloseModal = () => {
+    function handleCloseModal() {
         setShowModal(false)
     }
 
-    const handleSaveModal = async (updatedBike) => {
+    async function handleSaveModal(updatedBike) {
         setShowModal(false)
-
-        try {
-            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/bikes/' + updatedBike.id, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(updatedBike),
-            })
-
-            if (response.ok) {
-                let bikesCopy = [...bikes]
-                bikesCopy[bikesCopy.findIndex(bike => bike.id === updatedBike.id)] = updatedBike
-                setBikes(bikesCopy)
-            } else {
-                console.error('Failed to update bike')
-            }
-        } catch (error) {
-            console.error('Error:', error)
-        }
+        await putBikeAsync(updatedBike)
+        await loadBikes()
     }
 
-    const handelBikeDelete = async (id) => {
-        try {
-            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/bikes/' + id, {
-                method: 'DELETE',
-            })
-
-            if (response.ok) {
-                let bikesCopy = [...bikes]
-                let bikesRemoved = bikesCopy.filter(bike => bike.id !== id)
-                setBikes(bikesRemoved)
-            } else {
-                console.error('Failed to delete bike')
-            }
-        } catch (error) {
-            console.error('Error:', error)
-        }
+    async function handelBikeDelete(id) {
+        await deleteBikeAsync(id)
+        await loadBikes()
     }
 
     return (
