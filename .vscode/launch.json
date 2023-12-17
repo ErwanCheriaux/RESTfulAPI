@@ -33,6 +33,14 @@
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach"
+        },
+        {
+            "type": "firefox",
+            "request": "launch",
+            "reAttach": true,
+            "name": "Launch localhost",
+            "url": "http://localhost:3000/",
+            "webRoot": "${workspaceFolder}"
         }
     ]
 }
