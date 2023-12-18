@@ -76,6 +76,7 @@ export default function RiderForm({ formRef, onSubmit, defaultValue, hideSubmitB
                         type="text"
                         name="country"
                         value={formData.country}
+                        placeholder='France...'
                         onChange={handleChange} />
                 </Form.Group>
             </Row>
