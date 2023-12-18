@@ -1,23 +1,30 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { useLoaderData } from 'react-router-dom'
 import { Table, Button } from 'react-bootstrap'
 import BikeForm from './BikeForm'
 import BikeEditModal from './BikeEditModal'
-import { deleteBikeAsync, postBikeAsync, putBikeAsync } from '../api'
+import {
+    getBikesAsync,
+    postBikeAsync,
+    putBikeAsync,
+    deleteBikeAsync,
+} from '../api'
 
-export default function BikeTable({ bikes, setBikes, loadBikes }) {
+export default function BikeTable() {
+    const [bikes, setBikes] = useState(useLoaderData())
     const [bikeEdit, setBikeEdit] = useState({})
     const [showModal, setShowModal] = useState(false)
 
-    useEffect(() => {
-        loadBikes()
-    }, [loadBikes])
-
-    async function handleFormSubmit(newBike) {
-        const createdBike = await postBikeAsync(newBike)
-        setBikes([...bikes, createdBike])
+    async function reloadData() {
+        setBikes(await getBikesAsync())
     }
 
-    function handelBikeEdit(existingBike) {
+    async function handleFormSubmit(newBike) {
+        await postBikeAsync(newBike)
+        await reloadData()
+    }
+
+    function handleEdit(existingBike) {
         setBikeEdit(existingBike)
         setShowModal(true)
     }
@@ -28,13 +35,15 @@ export default function BikeTable({ bikes, setBikes, loadBikes }) {
 
     async function handleSaveModal(updatedBike) {
         setShowModal(false)
-        await putBikeAsync(updatedBike)
-        await loadBikes()
+        if (await putBikeAsync(updatedBike)) {
+            await reloadData()
+        }
     }
 
-    async function handelBikeDelete(id) {
-        await deleteBikeAsync(id)
-        await loadBikes()
+    async function handelDelete(id) {
+        if (await deleteBikeAsync(id)) {
+            await reloadData()
+        }
     }
 
     return (
@@ -64,8 +73,8 @@ export default function BikeTable({ bikes, setBikes, loadBikes }) {
                             <td>{bike.color}</td>
                             <td>{bike.size}</td>
                             <td>{bike.serialNumber}</td>
-                            <td><Button variant="warning" onClick={() => handelBikeEdit(bike)}>Edit</Button></td>
-                            <td><Button variant="danger" onClick={() => handelBikeDelete(bike.id)}>Delete</Button></td>
+                            <td><Button variant="warning" onClick={() => handleEdit(bike)}>Edit</Button></td>
+                            <td><Button variant="danger" onClick={() => handelDelete(bike.id)}>Delete</Button></td>
                         </tr>
                     ))}
                 </tbody>

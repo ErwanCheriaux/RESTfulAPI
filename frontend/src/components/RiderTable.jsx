@@ -1,30 +1,38 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { useLoaderData } from 'react-router-dom'
 import { Table, Button } from 'react-bootstrap'
 import RiderForm from './RiderForm'
 import RiderEditModal from './RiderEditModal'
 import BikeSelect from './BikeSelect'
-import { deleteRiderAsync, getRidersAsync, postRiderAsync, putRiderAsync } from '../api'
+import {
+    getRidersAsync,
+    postRiderAsync,
+    putRiderAsync,
+    deleteRiderAsync,
+    getBikesAsync,
+} from '../api'
 
-export default function RiderTable({ bikes, loadBikes }) {
-    const [riders, setRiders] = useState([])
+export default function RiderTable() {
+    const { ridersData, bikesData } = useLoaderData()
+    const [riders, setRiders] = useState(ridersData)
+    const [bikes, setBikes] = useState(bikesData)
     const [riderEdit, setRiderEdit] = useState({})
     const [showModal, setShowModal] = useState(false)
 
-    useEffect(() => {
-        loadRiders()
-    }, [])
+    async function reloadRidersData() {
+        setRiders(await getRidersAsync())
+    }
 
-    async function loadRiders() {
-        const data = await getRidersAsync()
-        setRiders(data)
+    async function reloadBikesData() {
+        setBikes(await getBikesAsync())
     }
 
     async function handleFormSubmit(newRider) {
         await postRiderAsync(newRider)
-        await loadRiders()
+        await reloadRidersData()
     }
 
-    function handelRiderEdit(existingRider) {
+    function handleEdit(existingRider) {
         setRiderEdit(existingRider)
         setShowModal(true)
     }
@@ -35,13 +43,15 @@ export default function RiderTable({ bikes, loadBikes }) {
 
     async function handleSaveModal(updatedRider) {
         setShowModal(false)
-        await putRiderAsync(updatedRider)
-        await loadRiders()
+        if (await putRiderAsync(updatedRider)) {
+            await reloadRidersData()
+        }
     }
 
-    async function handelRiderDelete(id) {
-        await deleteRiderAsync(id)
-        await loadRiders()
+    async function handleDelete(id) {
+        if (await deleteRiderAsync(id)) {
+            await reloadRidersData()
+        }
     }
 
     // d: yyyy-mm-dd
@@ -75,9 +85,9 @@ export default function RiderTable({ bikes, loadBikes }) {
                             <td>{rider.name}</td>
                             <td>{dateToAge(rider.birthdate)}</td>
                             <td>{rider.country}</td>
-                            <td><BikeSelect riderId={rider.id} bikes={bikes} loadBikes={loadBikes} /></td>
-                            <td><Button variant="warning" onClick={() => handelRiderEdit(rider)}>Edit</Button></td>
-                            <td><Button variant="danger" onClick={() => handelRiderDelete(rider.id)}>Delete</Button></td>
+                            <td><BikeSelect riderId={rider.id} bikes={bikes} reloadData={reloadBikesData} /></td>
+                            <td><Button variant="warning" onClick={() => handleEdit(rider)}>Edit</Button></td>
+                            <td><Button variant="danger" onClick={() => handleDelete(rider.id)}>Delete</Button></td>
                         </tr>
                     ))}
                 </tbody>

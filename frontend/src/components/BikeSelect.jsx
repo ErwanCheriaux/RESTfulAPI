@@ -1,11 +1,12 @@
 import { Form } from 'react-bootstrap'
 import { patchRiderBikeAsync } from '../api'
 
-export default function BikeSelect({ riderId, bikes, loadBikes }) {
+export default function BikeSelect({ riderId, bikes, reloadData }) {
     async function handleChange(event) {
         const { value } = event.target
-        await patchRiderBikeAsync(riderId, value)
-        await loadBikes()
+        if (await patchRiderBikeAsync(riderId, value)) {
+            await reloadData()
+        }
     }
 
     function getSelectedBikeId() {
@@ -22,7 +23,10 @@ export default function BikeSelect({ riderId, bikes, loadBikes }) {
             <option value={''} >Select a bike</option>
             {
                 bikes.map((bike, index) => (
-                    isBikeAvailable(bike) && <option key={index} value={bike.id}>{`${bike.year} ${bike.brand} ${bike.model}`}</option>
+                    isBikeAvailable(bike) &&
+                    <option key={index} value={bike.id}>
+                        {`${bike.year} ${bike.brand} ${bike.model}`}
+                    </option>
                 ))
             }
         </Form.Select >
