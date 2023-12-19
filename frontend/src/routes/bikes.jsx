@@ -1,5 +1,5 @@
 import BikeTable from "../components/BikeTable"
-import { getBikesAsync } from "../api"
+import { getBikesAsync } from "../utils/api"
 import { useLoaderData } from "react-router-dom"
 
 export async function loader() {
@@ -8,9 +8,5 @@ export async function loader() {
 }
 
 export default function Bikes() {
-    return (
-        <>
-            <BikeTable bikesData={useLoaderData()} />
-        </>
-    )
+    return <BikeTable bikesData={useLoaderData()} />
 }

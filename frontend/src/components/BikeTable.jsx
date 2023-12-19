@@ -7,7 +7,7 @@ import {
     postBikeAsync,
     putBikeAsync,
     deleteBikeAsync,
-} from '../api'
+} from '../utils/api'
 
 export default function BikeTable({ bikesData }) {
     const [bikes, setBikes] = useState(bikesData)
