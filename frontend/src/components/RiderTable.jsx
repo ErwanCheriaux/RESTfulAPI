@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useLoaderData } from 'react-router-dom'
 import { Table, Button } from 'react-bootstrap'
 import RiderForm from './RiderForm'
 import RiderEditModal from './RiderEditModal'
@@ -12,8 +11,7 @@ import {
     getBikesAsync,
 } from '../api'
 
-export default function RiderTable() {
-    const { ridersData, bikesData } = useLoaderData()
+export default function RiderTable({ ridersData, bikesData }) {
     const [riders, setRiders] = useState(ridersData)
     const [bikes, setBikes] = useState(bikesData)
     const [riderEdit, setRiderEdit] = useState({})
