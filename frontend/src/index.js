@@ -9,16 +9,21 @@ import Root from "./routes/root";
 import Index from './routes';
 import ErrorPage from './error-page';
 
+import {
+  action as authAction,
+} from './routes/authentication'
+
 import Bikes, {
-  loader as bikesLoader
+  loader as bikesLoader,
 } from './routes/bikes';
 
 import Riders, {
-  loader as ridersLoader
+  loader as ridersLoader,
 } from './routes/riders';
 
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.css';
+import Authentication from './routes/authentication';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +35,11 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
           { index: true, element: <Index /> },
+          {
+            path: 'auth',
+            element: <Authentication />,
+            action: authAction,
+          },
           {
             path: "bikes",
             element: <Bikes />,
