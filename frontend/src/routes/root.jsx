@@ -1,22 +1,23 @@
 import {
+    NavLink,
     Outlet,
 } from "react-router-dom";
 
 import {
-    Nav
+    Nav,
+    Navbar,
 } from "react-bootstrap";
 
 export default function Root() {
     return (
         <>
-            <Nav variant="underline">
-                <Nav.Item>
-                    <Nav.Link href="/bikes">Bikes</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link href="/riders">Riders</Nav.Link>
-                </Nav.Item>
-            </Nav>
+            <Navbar className="bg-body-tertiary">
+                <Navbar.Brand exact href="/">MountainBike</Navbar.Brand>
+                <Nav>
+                    <NavLink to="/bikes" className="nav-link" >Bikes</NavLink>
+                    <NavLink to="/riders" className="nav-link" >Riders</NavLink>
+                </Nav>
+            </Navbar>
             <div>
                 <Outlet />
             </div>
