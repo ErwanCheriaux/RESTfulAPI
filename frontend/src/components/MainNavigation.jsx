@@ -10,7 +10,7 @@ import {
 export default function MainNavigation() {
     return (
         <Navbar className="bg-body-tertiary">
-            <Navbar.Brand exact href="/">MountainBike</Navbar.Brand>
+            <Navbar.Brand href="/">MountainBike</Navbar.Brand>
             <Nav>
                 <NavLink to="/bikes" className="nav-link" >Bikes</NavLink>
                 <NavLink to="/riders" className="nav-link" >Riders</NavLink>
