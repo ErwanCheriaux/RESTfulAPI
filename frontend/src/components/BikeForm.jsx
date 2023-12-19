@@ -18,7 +18,7 @@ export default function BikeForm({ formRef, onSubmit, defaultValue, hideSubmitBu
     const [validated, setValidated] = useState(false)
     const [formData, setFormData] = useState(defaultValue || getDefaultFormData())
 
-    const handleChange = (event) => {
+    function handleChange(event) {
         const { name, value } = event.target
         setFormData({
             ...formData,
@@ -26,7 +26,7 @@ export default function BikeForm({ formRef, onSubmit, defaultValue, hideSubmitBu
         })
     }
 
-    const handleSubmit = (event) => {
+    function handleSubmit(event) {
         event.preventDefault()
 
         // Show validation

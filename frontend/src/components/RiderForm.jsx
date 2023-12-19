@@ -13,7 +13,7 @@ export default function RiderForm({ formRef, onSubmit, defaultValue, hideSubmitB
     const [validated, setValidated] = useState(false)
     const [formData, setFormData] = useState(defaultValue || getDefaultFormData())
 
-    const handleChange = (event) => {
+    function handleChange(event) {
         const { name, value } = event.target
         setFormData({
             ...formData,
@@ -21,7 +21,7 @@ export default function RiderForm({ formRef, onSubmit, defaultValue, hideSubmitB
         })
     }
 
-    const handleSubmit = (event) => {
+    function handleSubmit(event) {
         event.preventDefault()
 
         // Show validation
@@ -76,6 +76,7 @@ export default function RiderForm({ formRef, onSubmit, defaultValue, hideSubmitB
                         type="text"
                         name="country"
                         value={formData.country}
+                        placeholder='France...'
                         onChange={handleChange} />
                 </Form.Group>
             </Row>

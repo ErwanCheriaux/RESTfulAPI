@@ -3,7 +3,7 @@ import RiderTable from '../components/RiderTable'
 
 describe('RiderTable', () => {
     test('renders RiderTable component', async () => {
-        render(<RiderTable riders={[]} setRiders={() => { }} getRiders={() => { }} />)
+        render(<RiderTable ridersData={[]} bikesData={[]} />)
 
         // Check that the table is rendered
         expect(screen.getByText('My rider list')).toBeInTheDocument()

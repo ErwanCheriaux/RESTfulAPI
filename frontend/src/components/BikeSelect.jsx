@@ -1,55 +1,17 @@
-import { useState, useEffect } from 'react'
 import { Form } from 'react-bootstrap'
+import { patchRiderBikeAsync } from '../api'
 
-export default function BikeSelect({ riderId, bikes, getBikes }) {
-    const [riderBikes, setRiderBikes] = useState([])
-
-    useEffect(() => {
-        // Fetch data from your .NET API when the component mounts
-        getRiderBikes(riderId)
-    }, [riderId])
-
-    const handleChange = async (event) => {
+export default function BikeSelect({ riderId, bikes, reloadData }) {
+    async function handleChange(event) {
         const { value } = event.target
-
-        try {
-            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/riders/' + riderId + '/bikes?bike_id=' + value, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-
-            if (response.ok) {
-                console.log('Not implemented yet')
-                // reload bikes
-                getBikes()
-                // reload rider bikes
-                getRiderBikes(riderId)
-            } else {
-                console.error('Failed to update rider')
-            }
-        } catch (error) {
-            console.error('Error:', error)
-        }
-    }
-
-    async function getRiderBikes(id) {
-        try {
-            const response = await fetch(process.env.REACT_APP_SERVER_URL + '/riders/' + id + '/bikes')
-            if (response.ok) {
-                const data = await response.json()
-                setRiderBikes(data)
-            } else {
-                console.error('Failed to fetch data from API')
-            }
-        } catch (error) {
-            console.error('Error:', error)
+        if (await patchRiderBikeAsync(riderId, value)) {
+            await reloadData()
         }
     }
 
     function getSelectedBikeId() {
-        return riderBikes.length > 0 ? riderBikes[0].id : '';
+        const riderBike = bikes.find((bike) => bike.riderId === riderId)
+        return riderBike ? riderBike.id : ''
     }
 
     function isBikeAvailable(bike) {
@@ -61,7 +23,10 @@ export default function BikeSelect({ riderId, bikes, getBikes }) {
             <option value={''} >Select a bike</option>
             {
                 bikes.map((bike, index) => (
-                    isBikeAvailable(bike) && <option key={index} value={bike.id}>{bike.year + ' ' + bike.brand + ' ' + bike.model}</option>
+                    isBikeAvailable(bike) &&
+                    <option key={index} value={bike.id}>
+                        {`${bike.year} ${bike.brand} ${bike.model}`}
+                    </option>
                 ))
             }
         </Form.Select >

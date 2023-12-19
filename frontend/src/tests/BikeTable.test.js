@@ -3,7 +3,7 @@ import BikeTable from '../components/BikeTable'
 
 describe('BikeTable', () => {
     test('renders BikeTable component', async () => {
-        render(<BikeTable bikes={[]} setBikes={() => { }} getBikes={() => { }} />)
+        render(<BikeTable bikesData={[]} />)
 
         // Check that the table is rendered
         expect(screen.getByText('My bike list')).toBeInTheDocument()
