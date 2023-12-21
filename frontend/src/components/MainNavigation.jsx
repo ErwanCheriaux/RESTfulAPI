@@ -1,11 +1,11 @@
 import {
     NavLink,
-} from "react-router-dom";
+} from "react-router-dom"
 
 import {
     Nav,
     Navbar,
-} from "react-bootstrap";
+} from "react-bootstrap"
 
 export default function MainNavigation() {
     return (
