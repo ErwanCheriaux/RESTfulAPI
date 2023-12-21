@@ -1,18 +1,18 @@
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap'
 import {
     Link,
     useSearchParams,
     useActionData,
     useNavigation,
-} from 'react-router-dom';
+} from 'react-router-dom'
 
 export default function AuthForm() {
-    const data = useActionData();
-    const navigation = useNavigation();
+    const data = useActionData()
+    const navigation = useNavigation()
 
-    const [searchParams] = useSearchParams();
-    const isLogin = searchParams.get('mode') === 'login';
-    const isSubmitting = navigation.state === 'submitting';
+    const [searchParams] = useSearchParams()
+    const isLogin = searchParams.get('mode') === 'login'
+    const isSubmitting = navigation.state === 'submitting'
 
     return (
         <>
@@ -43,11 +43,14 @@ export default function AuthForm() {
                     >
                         {isLogin ? 'Create new user' : 'Login'}
                     </Link>
-                    <Button disabled={isSubmitting}>
+                    <Button
+                        type='submit'
+                        disabled={isSubmitting}
+                    >
                         {isSubmitting ? 'Submitting...' : 'Save'}
                     </Button>
                 </div>
             </Form >
         </>
-    );
+    )
 }  
