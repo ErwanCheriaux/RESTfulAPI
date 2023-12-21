@@ -47,6 +47,8 @@ services:
       - backend-mongo
     expose:
       - 27017
+    ports:
+      - 27017:27017
 
 networks:
   frontend-backend:
