@@ -11,7 +11,7 @@ import ErrorPage from './error-page';
 
 import {
   action as authAction,
-} from './routes/authentication'
+} from './routes/auth'
 
 import Bikes, {
   loader as bikesLoader,
@@ -23,7 +23,7 @@ import Riders, {
 
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.css';
-import Authentication from './routes/authentication';
+import Authentication from './routes/auth';
 
 const router = createBrowserRouter([
   {
