@@ -37,14 +37,17 @@ export default function AuthForm() {
                     </p>
                 </div>
                 <div>
-                    <Link to={`?mode=${isLogin ? 'signup' : 'login'}`}>
+                    <Link
+                        style={{ marginRight: '20px' }}
+                        to={`?mode=${isLogin ? 'signup' : 'login'}`}
+                    >
                         {isLogin ? 'Create new user' : 'Login'}
                     </Link>
                     <Button disabled={isSubmitting}>
                         {isSubmitting ? 'Submitting...' : 'Save'}
                     </Button>
                 </div>
-            </Form>
+            </Form >
         </>
     );
 }  
