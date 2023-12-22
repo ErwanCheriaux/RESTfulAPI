@@ -1,5 +1,10 @@
-import { Button, Form } from 'react-bootstrap'
 import {
+    Button,
+    FormLabel,
+    FormControl,
+} from 'react-bootstrap'
+import {
+    Form,
     Link,
     useSearchParams,
     useActionData,
@@ -28,12 +33,12 @@ export default function AuthForm() {
                 {data && data.message && <p>{data.message}</p>}
                 <div className='col-sm-4'>
                     <p>
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" name="email" required />
+                        <FormLabel>Email</FormLabel>
+                        <FormControl type="email" name="email" required />
                     </p>
                     <p>
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" name="password" required />
+                        <FormLabel>Password</FormLabel>
+                        <FormControl type="password" name="password" required />
                     </p>
                 </div>
                 <div>
