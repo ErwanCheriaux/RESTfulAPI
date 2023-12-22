@@ -22,9 +22,11 @@ builder.Services.AddSingleton<IMongoClient>(ServiceProvider =>
     return new MongoClient(mongoDBsettings?.ConnectionString);
 });
 
+builder.Services.AddSingleton<IUserRepository, MongoDBUserRepository>();
 builder.Services.AddSingleton<IBikeRepository, MongoDBBikeRepository>();
 builder.Services.AddSingleton<IRiderRepository, MongoDBRiderRepository>();
 
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBikeService, BikeService>();
 builder.Services.AddScoped<IRiderService, RiderService>();
 
