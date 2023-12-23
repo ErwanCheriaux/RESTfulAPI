@@ -8,7 +8,7 @@ public static class Extensions
     {
         return new(
             user.Email,
-            user.Passwordhash
+            user.PasswordHash
         );
     }
     public static BikeDto AsDto(this BikeEntity bike)

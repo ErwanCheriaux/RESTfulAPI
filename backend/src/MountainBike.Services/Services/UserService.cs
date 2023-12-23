@@ -33,6 +33,11 @@ public class UserService : IUserService
         return await _userRepository.GetUserAsync(id);
     }
 
+    public async Task<UserEntity> GetUserAsync(string email)
+    {
+        return await _userRepository.GetUserAsync(email);
+    }
+
     public async Task<IEnumerable<UserEntity>> GetUsersAsync()
     {
         return await _userRepository.GetUsersAsync();

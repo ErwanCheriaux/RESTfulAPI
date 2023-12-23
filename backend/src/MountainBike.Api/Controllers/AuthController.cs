@@ -29,7 +29,7 @@ public class AuthController : ControllerBase
         {
             Id = Guid.NewGuid(),
             Email = request.Email,
-            Passwordhash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
             CreationDate = DateTimeOffset.UtcNow
         };
 
@@ -41,6 +41,13 @@ public class AuthController : ControllerBase
     [Route("login")]
     public async Task<ActionResult> AuthLogin(UserDto request)
     {
+        var user = await _userService.GetUserAsync(request.Email);
+
+        if (user is null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+        {
+            return Unauthorized("Invalid credentials");
+        }
+
         return NoContent();
     }
 }
