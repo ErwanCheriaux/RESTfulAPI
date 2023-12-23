@@ -29,7 +29,7 @@ public class AuthController : ControllerBase
         {
             Id = Guid.NewGuid(),
             Email = request.Email,
-            Passwordhash = request.Password,
+            Passwordhash = BCrypt.Net.BCrypt.HashPassword(request.Password),
             CreationDate = DateTimeOffset.UtcNow
         };
 
