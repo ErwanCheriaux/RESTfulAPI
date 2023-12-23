@@ -20,6 +20,11 @@ public class AuthController : ControllerBase
     [Route("signup")]
     public async Task<ActionResult> AuthSignup(UserDto request)
     {
+        if (await _userService.EmailExistAsync(request.Email))
+        {
+            return Conflict();
+        }
+
         UserEntity user = new()
         {
             Id = Guid.NewGuid(),

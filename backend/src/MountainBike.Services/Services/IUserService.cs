@@ -9,4 +9,5 @@ public interface IUserService
     public Task CreateUserAsync(UserEntity user);
     public Task UpdateUserAsync(UserEntity user);
     public Task DeleteUserAsync(Guid id);
+    public Task<bool> EmailExistAsync(string email);
 }

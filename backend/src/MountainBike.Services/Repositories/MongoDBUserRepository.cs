@@ -34,6 +34,12 @@ public class MongoDBUserRepository : IUserRepository
         return await _usersCollection.Find(filter).SingleOrDefaultAsync();
     }
 
+    public async Task<UserEntity> GetUserAsync(string email)
+    {
+        var filter = _usersFilterBuilder.Eq(user => user.Email, email);
+        return await _usersCollection.Find(filter).SingleOrDefaultAsync();
+    }
+
     public async Task<IEnumerable<UserEntity>> GetUsersAsync()
     {
         return await _usersCollection.Find(new BsonDocument()).ToListAsync();

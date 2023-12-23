@@ -22,6 +22,12 @@ public class UserService : IUserService
         await _userRepository.DeleteUserAsync(id);
     }
 
+    public async Task<bool> EmailExistAsync(string email)
+    {
+        var user = await _userRepository.GetUserAsync(email);
+        return user is not null;
+    }
+
     public async Task<UserEntity> GetUserAsync(Guid id)
     {
         return await _userRepository.GetUserAsync(id);
