@@ -4,8 +4,8 @@ using MountainBike.Api.Attributes;
 namespace MountainBike.Api;
 
 public record UserDto(
-    string Email,
-    string Password
+    [Required] string Email,
+    [Required] string Password
 );
 
 public record BikeDto(
