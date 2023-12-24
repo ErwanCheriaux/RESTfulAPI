@@ -9,9 +9,8 @@ import Root from "./routes/root";
 import Index from './routes';
 import ErrorPage from './error-page';
 
-import {
-  action as authAction,
-} from './routes/auth';
+import { action as authAction } from './routes/auth';
+import { action as logoutAction } from './routes/logout';
 
 import Bikes, {
   loader as bikesLoader,
@@ -43,6 +42,10 @@ const router = createBrowserRouter([
             action: authAction,
           },
           {
+            path: 'logout',
+            action: logoutAction,
+          },
+          {
             path: "bikes",
             element: <Bikes />,
             loader: bikesLoader,
@@ -50,7 +53,7 @@ const router = createBrowserRouter([
           {
             path: "riders",
             element: <Riders />,
-            loader: ridersLoader
+            loader: ridersLoader,
           },
         ],
       },
