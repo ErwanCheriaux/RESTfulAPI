@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MountainBike.Services.Entities;
@@ -15,7 +16,9 @@ public class AuthController : ControllerBase
     private readonly IConfiguration _configuration;
     private readonly ILogger<AuthController> _logger;
 
-    public AuthController(IUserService userService, IConfiguration configuration, ILogger<AuthController> logger)
+    public AuthController(IUserService userService,
+                          IConfiguration configuration,
+                          ILogger<AuthController> logger)
     {
         _userService = userService;
         _configuration = configuration;
@@ -41,8 +44,9 @@ public class AuthController : ControllerBase
 
         await _userService.CreateUserAsync(user);
         string token = CreateToken(request.Email);
+        var response = JsonSerializer.Serialize(new { token });
 
-        return Ok(token);
+        return Ok(response);
     }
 
     [HttpPost]
@@ -57,8 +61,9 @@ public class AuthController : ControllerBase
         }
 
         string token = CreateToken(request.Email);
+        var response = JsonSerializer.Serialize(new { token });
 
-        return Ok(token);
+        return Ok(response);
     }
 
     private string CreateToken(string email)
@@ -74,7 +79,7 @@ public class AuthController : ControllerBase
 
         var token = new JwtSecurityToken(
             claims: claims,
-            expires: DateTime.Now.AddDays(1),
+            expires: DateTime.Now.AddHours(1),
             signingCredentials: credentials
         );
 
