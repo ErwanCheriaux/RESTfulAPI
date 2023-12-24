@@ -21,7 +21,7 @@ export default function Root() {
         }
 
         const tokenDuration = getTokenDuration()
-        console.log(tokenDuration)
+        console.log(`token duration: ${Math.round(tokenDuration / 600) / 100} min`)
 
         setTimeout(() => {
             submit(null, { action: '/logout', method: 'post' })

@@ -35,8 +35,9 @@ export async function action({ request }) {
     const token = resData.token
 
     localStorage.setItem('token', token)
-    const expiration = new Date()
-    expiration.setHours(expiration.getHours() + 1)
+
+    const decodedJwt = parseJwt(token)
+    const expiration = new Date(decodedJwt.exp * 1000)
     localStorage.setItem('expiration', expiration.toISOString())
 
     return redirect('/')
@@ -45,3 +46,11 @@ export async function action({ request }) {
 export default function Authentication() {
     return <AuthForm />
 }
+
+const parseJwt = (token) => {
+    try {
+        return JSON.parse(atob(token.split(".")[1]));
+    } catch (e) {
+        return null;
+    }
+};
