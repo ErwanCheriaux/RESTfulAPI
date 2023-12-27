@@ -27,12 +27,13 @@ export async function getBikeAsync(id) {
     }
 }
 
-export async function postBikeAsync(newBike) {
+export async function postBikeAsync(newBike, token) {
     try {
         const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/bikes`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
             },
             body: JSON.stringify(newBike),
         });
@@ -48,12 +49,13 @@ export async function postBikeAsync(newBike) {
     }
 }
 
-export async function putBikeAsync(updatedBike) {
+export async function putBikeAsync(updatedBike, token) {
     try {
         const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/bikes/${updatedBike.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
             },
             body: JSON.stringify(updatedBike),
         });
@@ -69,10 +71,13 @@ export async function putBikeAsync(updatedBike) {
     return false;
 }
 
-export async function deleteBikeAsync(id) {
+export async function deleteBikeAsync(id, token) {
     try {
         const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/bikes/${id}`, {
             method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+            }
         });
 
         if (response.ok) {
