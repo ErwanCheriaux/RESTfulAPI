@@ -79,13 +79,13 @@ public class AuthController : ControllerBase
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
         var token = new JwtSecurityToken(
+            issuer: _configuration.GetSection("JwtSettings:Issuer").Value,
+            audience: _configuration.GetSection("JwtSettings:Audience").Value,
             claims: claims,
             expires: DateTime.Now.AddHours(1),
             signingCredentials: credentials
         );
 
-        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-        return jwt;
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
