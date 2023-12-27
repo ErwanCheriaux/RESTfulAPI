@@ -28,6 +28,7 @@ import { tokenLoader } from './utils/auth'
 const router = createBrowserRouter([
   {
     path: "/",
+    id: 'root',
     element: <Root />,
     loader: tokenLoader,
     errorElement: <ErrorPage />,

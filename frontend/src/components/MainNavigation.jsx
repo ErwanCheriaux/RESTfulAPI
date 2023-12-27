@@ -1,6 +1,7 @@
 import {
+    Form,
     NavLink,
-    useSubmit,
+    useRouteLoaderData,
 } from "react-router-dom"
 
 import {
@@ -8,21 +9,8 @@ import {
     Navbar,
 } from "react-bootstrap"
 
-import { getAuthToken } from "../utils/auth"
-
 export default function MainNavigation() {
-    const submit = useSubmit()
-    function handleLogout() {
-        submit(null, { action: '/logout', method: 'post' })
-    }
-
-    function isLoggedIn() {
-        const token = getAuthToken()
-        if (token === null) {
-            return false
-        }
-        return true
-    }
+    const token = useRouteLoaderData('root')
 
     return (
         <Navbar className="bg-body-tertiary justify-content-between">
@@ -32,8 +20,10 @@ export default function MainNavigation() {
                 <NavLink to="/riders" className="nav-link" >Riders</NavLink>
             </Nav>
             <Nav>
-                {isLoggedIn() ?
-                    <NavLink onClick={handleLogout} className="nav-link" >Logout</NavLink> :
+                {token ?
+                    <Form action="/logout" method="post">
+                        <button className="nav-link">Logout</button>
+                    </Form> :
                     <NavLink to="/auth" className="nav-link" >Login</NavLink>
                 }
             </Nav>
