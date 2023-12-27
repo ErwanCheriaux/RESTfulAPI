@@ -73,8 +73,9 @@ public class AuthController : ControllerBase
             new(ClaimTypes.Email, email)
         };
 
-        var jwtToken = _configuration.GetSection("JwtSettings:Token").Value;
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtToken!));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+            _configuration.GetSection("JwtSettings:Key").Value!));
+
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
         var token = new JwtSecurityToken(

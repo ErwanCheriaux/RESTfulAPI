@@ -50,7 +50,7 @@ Save MongoDB password into .Net Secret Manager
 ```console
 dotnet user-secrets init
 dotnet user-secrets set MongoDBSettings:Password mongoadmin
-dotnet user-secrets set JwtSettings:Token dN8GzJLMDyCEvjWrPs9d2ls4p0LgeSWrHc9612WYxqEZejT9KeSzsGqANEA3vgb7Q
+dotnet user-secrets set JwtSettings:Key dN8GzJLMDyCEvjWrPs9d2ls4p0LgeSWrHc9612WYxqEZejT9KeSzsGqANEA3vgb7Q
 ```
 
 Build the MountainBike project into a docker image
