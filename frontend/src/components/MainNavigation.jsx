@@ -1,7 +1,6 @@
 import {
     Form,
     NavLink,
-    useRouteLoaderData,
 } from "react-router-dom"
 
 import {
@@ -9,9 +8,7 @@ import {
     Navbar,
 } from "react-bootstrap"
 
-export default function MainNavigation() {
-    const token = useRouteLoaderData('root')
-
+export default function MainNavigation({ token }) {
     return (
         <Navbar className="bg-body-tertiary justify-content-between">
             <Nav>

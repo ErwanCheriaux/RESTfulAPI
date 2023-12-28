@@ -30,7 +30,7 @@ export default function Root() {
 
     return (
         <>
-            <MainNavigation />
+            <MainNavigation token={token} />
             <div>
                 <Outlet />
             </div>

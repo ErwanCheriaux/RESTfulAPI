@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useRouteLoaderData } from 'react-router'
 import { Table, Button } from 'react-bootstrap'
 import BikeForm from './BikeForm'
 import BikeEditModal from './BikeEditModal'
@@ -10,8 +9,7 @@ import {
     deleteBikeAsync,
 } from '../utils/api'
 
-export default function BikeTable({ bikesData }) {
-    const token = useRouteLoaderData('root')
+export default function BikeTable({ bikesData, token }) {
     const [bikes, setBikes] = useState(bikesData)
     const [bikeEdit, setBikeEdit] = useState({})
     const [showModal, setShowModal] = useState(false)
