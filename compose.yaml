@@ -27,6 +27,7 @@ services:
     environment:
       - MongoDBSettings:Host=mongo
       - MongoDBSettings:Password=mongoadmin
+      - JwtSettings:Key=dN8GzJLMDyCEvjWrPs9d2ls4p0LgeSWrHc9612WYxqEZejT9KeSzsGqANEA3vgb7Q
     networks:
       - frontend-backend
       - backend-mongo
