@@ -8,6 +8,9 @@ using MongoDB.Driver;
 using MountainBike.Services.Settings;
 using MountainBike.Services.Repositories;
 using MountainBike.Services.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +19,7 @@ BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
 BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
 var mongoDBsettings = builder.Configuration.GetSection(nameof(MongoDBSettings)).Get<MongoDBSettings>();
 var reactClientSettings = builder.Configuration.GetSection(nameof(ReactClientSettings)).Get<ReactClientSettings>();
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 
 builder.Services.AddSingleton<IMongoClient>(ServiceProvider =>
 {
@@ -46,6 +50,30 @@ builder.Services.AddCors(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add Authentication and Authorization
+builder.Services.AddAuthentication(o =>
+{
+    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(o =>
+{
+    o.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = jwtSettings.GetSection("Issuer").Value,
+        ValidAudience = jwtSettings.GetSection("Audience").Value,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtSettings.GetSection("Key").Value!)),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateIssuerSigningKey = true,
+        ValidateLifetime = true
+    };
+});
+builder.Services.AddAuthorization();
+
+// Add HealthChecks
 builder.Services.AddHealthChecks()
     .AddMongoDb(mongoDBsettings?.ConnectionString ?? "",
                 name: "mongodb",
@@ -63,6 +91,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowOrigin");
 // app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
