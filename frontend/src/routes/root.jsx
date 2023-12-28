@@ -1,26 +1,39 @@
+import { useEffect } from "react"
 import {
-    NavLink,
     Outlet,
-} from "react-router-dom";
-
-import {
-    Nav,
-    Navbar,
-} from "react-bootstrap";
+    useLoaderData,
+    useSubmit,
+} from "react-router-dom"
+import MainNavigation from "../components/MainNavigation"
+import { getTokenDuration } from "../utils/auth"
 
 export default function Root() {
+    const token = useLoaderData()
+    const submit = useSubmit()
+    useEffect(() => {
+        if (!token) {
+            return
+        }
+
+        if (token === 'EXPIRED') {
+            submit(null, { action: '/logout', method: 'post' })
+            return
+        }
+
+        const tokenDuration = getTokenDuration()
+        console.log(`token duration: ${Math.round(tokenDuration / 600) / 100} min`)
+
+        setTimeout(() => {
+            submit(null, { action: '/logout', method: 'post' })
+        }, tokenDuration)
+    }, [token, submit])
+
     return (
         <>
-            <Navbar className="bg-body-tertiary">
-                <Navbar.Brand exact href="/">MountainBike</Navbar.Brand>
-                <Nav>
-                    <NavLink to="/bikes" className="nav-link" >Bikes</NavLink>
-                    <NavLink to="/riders" className="nav-link" >Riders</NavLink>
-                </Nav>
-            </Navbar>
+            <MainNavigation token={token} />
             <div>
                 <Outlet />
             </div>
         </>
-    );
+    )
 }

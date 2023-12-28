@@ -1,5 +1,5 @@
 import { Form } from 'react-bootstrap'
-import { patchRiderBikeAsync } from '../api'
+import { patchRiderBikeAsync } from '../utils/api'
 
 export default function BikeSelect({ riderId, bikes, reloadData }) {
     async function handleChange(event) {

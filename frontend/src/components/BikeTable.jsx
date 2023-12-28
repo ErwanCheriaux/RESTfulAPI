@@ -7,9 +7,9 @@ import {
     postBikeAsync,
     putBikeAsync,
     deleteBikeAsync,
-} from '../api'
+} from '../utils/api'
 
-export default function BikeTable({ bikesData }) {
+export default function BikeTable({ bikesData, token }) {
     const [bikes, setBikes] = useState(bikesData)
     const [bikeEdit, setBikeEdit] = useState({})
     const [showModal, setShowModal] = useState(false)
@@ -19,7 +19,7 @@ export default function BikeTable({ bikesData }) {
     }
 
     async function handleFormSubmit(newBike) {
-        await postBikeAsync(newBike)
+        await postBikeAsync(newBike, token)
         await reloadData()
     }
 
@@ -34,19 +34,26 @@ export default function BikeTable({ bikesData }) {
 
     async function handleSaveModal(updatedBike) {
         setShowModal(false)
-        if (await putBikeAsync(updatedBike)) {
+        if (await putBikeAsync(updatedBike, token)) {
             await reloadData()
         }
     }
 
     async function handelDelete(id) {
-        if (await deleteBikeAsync(id)) {
+        if (await deleteBikeAsync(id, token)) {
             await reloadData()
         }
     }
 
     return (
         <>
+            {!token &&
+                <div className="card">
+                    <div className="card-body text-warning">
+                        You must login to add, edit and delete bikes.
+                    </div>
+                </div>}
+
             <h1>My bike list</h1>
             <Table hover size='sm'>
                 <thead>
@@ -72,8 +79,24 @@ export default function BikeTable({ bikesData }) {
                             <td>{bike.color}</td>
                             <td>{bike.size}</td>
                             <td>{bike.serialNumber}</td>
-                            <td><Button variant="warning" onClick={() => handleEdit(bike)}>Edit</Button></td>
-                            <td><Button variant="danger" onClick={() => handelDelete(bike.id)}>Delete</Button></td>
+                            <td>
+                                <Button
+                                    disabled={!token}
+                                    variant="warning"
+                                    onClick={() => handleEdit(bike)}
+                                >
+                                    Edit
+                                </Button>
+                            </td>
+                            <td>
+                                <Button
+                                    disabled={!token}
+                                    variant="danger"
+                                    onClick={() => handelDelete(bike.id)}
+                                >
+                                    Delete
+                                </Button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
@@ -85,8 +108,12 @@ export default function BikeTable({ bikesData }) {
                 onClickClose={handleCloseModal}
                 onClickSave={handleSaveModal} />
 
-            <h1>Add a new bike</h1>
-            <BikeForm onSubmit={handleFormSubmit} />
+            {token &&
+                <>
+                    <h1>Add a new bike</h1>
+                    <BikeForm onSubmit={handleFormSubmit} />
+                </>
+            }
         </>
     )
 }

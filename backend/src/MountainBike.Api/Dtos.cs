@@ -3,6 +3,11 @@ using MountainBike.Api.Attributes;
 
 namespace MountainBike.Api;
 
+public record UserDto(
+    [Required] string Email,
+    [Required] string Password
+);
+
 public record BikeDto(
     Guid Id,
     Guid? RiderId,

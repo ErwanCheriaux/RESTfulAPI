@@ -4,6 +4,13 @@ namespace MountainBike.Api;
 
 public static class Extensions
 {
+    public static UserDto AsDto(this UserEntity user)
+    {
+        return new(
+            user.Email,
+            user.PasswordHash
+        );
+    }
     public static BikeDto AsDto(this BikeEntity bike)
     {
         return new(
@@ -16,7 +23,8 @@ public static class Extensions
             bike.Color,
             bike.Size,
             bike.SerialNumber,
-            bike.CreationDate);
+            bike.CreationDate
+            );
     }
 
     public static RiderDto AsDto(this RiderEntity rider)
@@ -26,7 +34,8 @@ public static class Extensions
             rider.Name,
             rider.Birthdate,
             rider.Country,
-            rider.CreationDate);
+            rider.CreationDate
+            );
     }
 
     public static int AsAge(this DateOnly date)

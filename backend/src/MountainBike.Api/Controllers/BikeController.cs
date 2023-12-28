@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MountainBike.Services.Entities;
 using MountainBike.Services.Services;
@@ -48,7 +49,7 @@ public class BikeController : ControllerBase
     }
 
     // POST /bikes
-    [HttpPost]
+    [HttpPost, Authorize]
     public async Task<ActionResult<BikeDto>> CreateBikeAsync(CreateBikeDto bikeDto)
     {
         BikeEntity bike = new()
@@ -71,7 +72,7 @@ public class BikeController : ControllerBase
     }
 
     // PUT /bikes/{id}
-    [HttpPut("{id}")]
+    [HttpPut("{id}"), Authorize]
     public async Task<ActionResult> UpdateBikeAsync(Guid id, UpdateBikeDto bikeDto)
     {
         var existingBike = await _bikeService.GetBikeAsync(id);
@@ -95,7 +96,7 @@ public class BikeController : ControllerBase
     }
 
     // DELETE /bikes/{id}
-    [HttpDelete("{id}")]
+    [HttpDelete("{id}"), Authorize]
     public async Task<ActionResult> DeleteBikeAsync(Guid id)
     {
         var existingBike = await _bikeService.GetBikeAsync(id);

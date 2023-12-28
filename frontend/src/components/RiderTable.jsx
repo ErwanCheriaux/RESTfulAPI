@@ -9,7 +9,7 @@ import {
     putRiderAsync,
     deleteRiderAsync,
     getBikesAsync,
-} from '../api'
+} from '../utils/api'
 
 export default function RiderTable({ ridersData, bikesData }) {
     const [riders, setRiders] = useState(ridersData)
